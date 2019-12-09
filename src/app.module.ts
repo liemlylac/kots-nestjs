@@ -19,7 +19,7 @@ import { TimesheetModule } from './timesheet/timesheet.module';
       port: 3306,
       username: 'root',
       password: 'root',
-      database: 'kots',
+      database: 'kotsdb',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
