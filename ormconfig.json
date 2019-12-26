@@ -1,0 +1,24 @@
+[
+    {
+        "skip": false,
+        "name": "default",
+        "type": "mysql",
+        "host": "localhost",
+        "port": 3306,
+        "username": "root",
+        "password": "root",
+        "database": "kotsdb",
+        "entities": [
+            "dist/**/*.entity{.ts,.js}"
+        ],
+        "synchronize": true,
+        "migrationsTableName": "migration",
+        "migrations": [
+            "migration/*.js"
+        ],
+        "cli": {
+            "migrationsDir": "migration"
+        },
+        "logging": false
+    }
+]

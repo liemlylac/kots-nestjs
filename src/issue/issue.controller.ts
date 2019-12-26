@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IssueService } from './issue.service';
-import { Issue } from './issue.entity';
+import { IssueEntity } from './issue.entity';
 
 @Controller('issues')
 export class IssueController {
@@ -8,22 +8,22 @@ export class IssueController {
   }
 
   @Get()
-  findAll(): Promise<Issue[]> {
+  findAll(): Promise<IssueEntity[]> {
     return this.taskService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Issue> {
+  findOne(@Param('id') id: number): Promise<IssueEntity> {
     return this.taskService.findOne(id);
   }
 
   @Post()
-  create(@Body() task: Issue): Promise<Issue> {
+  create(@Body() task: IssueEntity): Promise<IssueEntity> {
     return this.taskService.create(task);
   }
 
   @Put()
-  update(@Body() task: Issue) {
+  update(@Body() task: IssueEntity) {
     return this.taskService.update(task);
   }
 
