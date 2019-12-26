@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { Project } from './project.entity';
+import { ProjectEntity } from './project.entity';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('projects')
@@ -10,23 +10,23 @@ export class ProjectController {
   ) {}
 
   @Get()
-  findAll(): Promise<Project[]> {
+  findAll(): Promise<ProjectEntity[]> {
     return this.projectService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<Project> {
+  findOne(@Param('id') id: number): Promise<ProjectEntity> {
     return this.projectService.findOne(id);
   }
 
   @UseGuards(AuthGuard())
   @Post()
-  create(@Body() project: Project): Promise<Project> {
+  create(@Body() project: ProjectEntity): Promise<ProjectEntity> {
     return this.projectService.create(project);
   }
 
   @Put()
-  update(@Body() project: Project) {
+  update(@Body() project: ProjectEntity) {
     return this.projectService.update(project);
   }
 

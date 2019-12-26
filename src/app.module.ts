@@ -6,24 +6,15 @@ import { IssueModule } from './issue/issue.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { TimesheetModule } from './timesheet/timesheet.module';
+import { TimesheetModule } from './time-sheet/timesheet.module';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot(),
+    AuthModule,
     ProjectModule,
     IssueModule,
     UserModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'root',
-      database: 'kotsdb',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
-    AuthModule,
     TimesheetModule,
   ],
   controllers: [AppController],

@@ -1,7 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { UserCreateDto } from './dto/user.create.dto';
+import { ApiCreatedResponse } from '@nestjs/swagger';
+import { UserCreateRo } from './ro/user.create.ro';
 
 @Controller('user')
 export class UserController {
@@ -10,28 +25,31 @@ export class UserController {
   ) {}
 
   @Get()
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(ClassSerializerInterceptor)
   getProfile(@Request() req) {
     return this.userService.findByUsername(req.user.username);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<User> {
+  @UseInterceptors(ClassSerializerInterceptor)
+  findOne(@Param('id') id: number): Promise<UserEntity> {
     return this.userService.findOne(id);
   }
 
+  @ApiCreatedResponse({type: UserCreateRo})
   @Post()
-  create(@Body() user: User): Promise<User> {
-    return this.userService.create(user);
+  create(@Body() userCreateDto: UserCreateDto): Promise<UserEntity> {
+    return this.userService.create(userCreateDto);
   }
 
   @Put()
-  update(@Body() user: User) {
+  update(@Body() user: UserEntity) {
     return this.userService.update(user);
   }
 

@@ -1,9 +1,18 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Issue } from '../issue/issue.entity';
-import { User } from '../user/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { IssueEntity } from '../issue/issue.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity({name: 'project'})
-export class Project {
+export class ProjectEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -13,28 +22,29 @@ export class Project {
   @Column({type: 'text', nullable: true})
   description: string;
 
-  @OneToMany(type => Issue, issue => issue.project)
-  issues: Issue[];
+  @OneToMany(() => IssueEntity, issue => issue.project)
+  issues: IssueEntity[];
 
-  @ManyToOne(type => User, user => user.projects)
-  creator: User;
+  @ManyToOne(() => UserEntity, user => user.projects)
+  @JoinColumn({ name: 'creator_id' })
+  creator: UserEntity;
 
-  @Column({type: 'datetime'})
+  @Column({name: 'start_date', type: 'datetime'})
   startDate: Date;
 
-  @Column({type: 'datetime', nullable: true})
+  @Column({name: 'due_date', type: 'datetime', nullable: true})
   dueDate: Date;
 
-  @Column({type: 'datetime', nullable: true})
+  @Column({name: 'finish_date', type: 'datetime', nullable: true})
   finishDate: Date;
 
   @Column({default: false})
   active: boolean;
 
-  @CreateDateColumn({type: 'timestamp'})
+  @CreateDateColumn({name: 'created_at'})
   createdAt: Date;
 
-  @UpdateDateColumn({type: 'timestamp'})
+  @UpdateDateColumn({name: 'updated_at'})
   updatedAt: Date;
 
 }

@@ -8,49 +8,69 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Project } from '../project/project.entity';
-import { Issue } from '../issue/issue.entity';
+import { Exclude } from 'class-transformer';
+import { ProjectEntity } from '../project/project.entity';
+import { IssueEntity } from '../issue/issue.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({name: 'user'})
-export class User {
+export class UserEntity {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({type: 'varchar', length: 255})
+  @ApiProperty()
+  @Column({name: 'display_name', type: 'varchar', length: 255})
   displayName: string;
 
+  @ApiProperty()
   @Column({type: 'varchar', length: 255, unique: true})
   username: string;
 
+  @ApiProperty()
   @Column({type: 'varchar', length: 255})
+  @Exclude()
   password: string;
 
+  @ApiProperty()
   @Column({type: 'varchar', length: 255, nullable: true})
   email: string;
 
+  @ApiProperty()
   @Column({type: 'varchar', length: 255, nullable: true})
   phone: string;
 
+  @ApiProperty()
   @Column({default: true})
   active: boolean;
 
-  @CreateDateColumn({type: 'timestamp'})
+  @ApiProperty()
+  @CreateDateColumn({name: 'created_at'})
   createdAt: Date;
 
-  @UpdateDateColumn({type: 'timestamp'})
+  @ApiProperty()
+  @UpdateDateColumn({name: 'updated_at'})
   updatedAt: Date;
 
-  @ManyToMany(type => Project)
+  @ApiProperty()
+  @ManyToMany(() => ProjectEntity)
   @JoinTable()
-  projects: Project[];
+  projects: ProjectEntity[];
 
-  @OneToMany(type => Project, project => project.creator)
-  projectsCreated: Project[];
+  @ApiProperty()
+  @OneToMany(() => ProjectEntity, project => project.creator)
+  projectsCreated: ProjectEntity[];
 
-  @OneToMany(type => Issue, issue => issue.creator)
-  issuesCreated: Issue[];
+  @ApiProperty()
+  @OneToMany(() => IssueEntity, issue => issue.creator)
+  issuesCreated: IssueEntity[];
 
-  @ManyToMany(type => Issue)
+  @ApiProperty()
+  @ManyToMany(() => IssueEntity)
   @JoinTable()
-  issuesAssigned: Issue[];
+  issuesAssigned: IssueEntity[];
+
+  constructor(partial?: Partial<UserEntity>) {
+    Object.assign(this, partial);
+  }
 }
