@@ -2,10 +2,10 @@ import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { INestApplication } from '@nestjs/common';
-import { UserService } from '../user.service';
-import { UserEntity } from '../user.entity';
-import { UserMockRepository } from './user.mock.repository';
-import { UserController } from '../user.controller';
+import { UserService } from '../src/user/user.service';
+import { UserEntity } from '../src/user/user.entity';
+import { UserMockRepository } from '../src/user/test/user.mock.repository';
+import { UserController } from '../src/user/user.controller';
 
 describe('UserModule (e2e)', () => {
   let app: INestApplication;
