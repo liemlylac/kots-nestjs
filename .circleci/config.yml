@@ -10,8 +10,12 @@ jobs:
       - checkout
 
       - run:
+          name: set-global-prefix
+          command: npm config set prefix '$HOME/.npm-global/'
+
+      - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
+          command: 'npm install -g npm@latest'
 
       - restore_cache:
           keys:
