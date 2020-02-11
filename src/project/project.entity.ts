@@ -1,18 +1,9 @@
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm';
-import { IssueEntity } from '../issue/issue.entity';
-import { UserEntity } from '../user/user.entity';
 
 @Entity({name: 'project'})
-export class ProjectEntity {
+export class Project {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,13 +12,6 @@ export class ProjectEntity {
 
   @Column({type: 'text', nullable: true})
   description: string;
-
-  @OneToMany(() => IssueEntity, issue => issue.project)
-  issues: IssueEntity[];
-
-  @ManyToOne(() => UserEntity, user => user.projects)
-  @JoinColumn({ name: 'creator_id' })
-  creator: UserEntity;
 
   @Column({name: 'start_date', type: 'datetime'})
   startDate: Date;

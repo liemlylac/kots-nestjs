@@ -1,0 +1,5 @@
+jwt:
+  secret: "ultr@Secr3t$100"
+
+pepper:
+  secret: "me$syBoat29"

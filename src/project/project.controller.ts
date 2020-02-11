@@ -1,32 +1,29 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { ProjectEntity } from './project.entity';
+import { Project } from './project.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Projects')
 @Controller('projects')
+@UseGuards(AuthGuard())
 export class ProjectController {
   constructor(
     private readonly projectService: ProjectService,
   ) {}
 
-  @Get()
-  findAll(): Promise<ProjectEntity[]> {
-    return this.projectService.findAll();
-  }
-
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<ProjectEntity> {
+  findOne(@Param('id') id: number): Promise<Project> {
     return this.projectService.findOne(id);
   }
 
-  @UseGuards(AuthGuard())
   @Post()
-  create(@Body() project: ProjectEntity): Promise<ProjectEntity> {
+  create(@Body() project: Project): Promise<Project> {
     return this.projectService.create(project);
   }
 
-  @Put()
-  update(@Body() project: ProjectEntity) {
+  @Put(':id')
+  update(@Body() project: Project) {
     return this.projectService.update(project);
   }
 

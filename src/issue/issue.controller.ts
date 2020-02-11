@@ -1,34 +1,37 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body, Controller, Delete, Get, Param, Post, Put, UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { IssueService } from './issue.service';
-import { IssueEntity } from './issue.entity';
+import { Issue } from './issue.entity';
 
+@ApiTags('Issues')
 @Controller('issues')
+@UseGuards(AuthGuard())
 export class IssueController {
-  constructor(private readonly taskService: IssueService) {
-  }
-
-  @Get()
-  findAll(): Promise<IssueEntity[]> {
-    return this.taskService.findAll();
+  constructor(
+    private readonly issueService: IssueService,
+  ) {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number): Promise<IssueEntity> {
-    return this.taskService.findOne(id);
+  findOne(@Param('id') id: number): Promise<Issue> {
+    return this.issueService.findById(id);
   }
 
   @Post()
-  create(@Body() task: IssueEntity): Promise<IssueEntity> {
-    return this.taskService.create(task);
+  create(@Body() task: Issue): Promise<Issue> {
+    return this.issueService.create(task);
   }
 
-  @Put()
-  update(@Body() task: IssueEntity) {
-    return this.taskService.update(task);
+  @Put(':id')
+  update(@Body() task: Issue) {
+    return this.issueService.update(task);
   }
 
   @Delete()
   delete(@Param('id') id: number) {
-    return this.taskService.delete(id);
+    return this.issueService.delete(id);
   }
 }

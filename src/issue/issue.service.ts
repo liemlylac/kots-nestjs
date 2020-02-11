@@ -1,44 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { IssueEntity } from './issue.entity';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { Issue } from './issue.entity';
+import { IssueRepository } from './issue.repository';
 
 @Injectable()
 export class IssueService {
   constructor(
-    @InjectRepository(IssueEntity)
-    private readonly issueRepo: Repository<IssueEntity>,
+    @InjectRepository(Issue)
+    private readonly issueRepo: IssueRepository,
   ) {}
 
-  async findAll(): Promise<IssueEntity[]> {
-    return await this.issueRepo.find();
-  }
-
-  async findByProject(projectId: number): Promise<IssueEntity[]> {
-    return await this.issueRepo.find({
-      where: {
-        projectId,
-      },
-    });
-  }
-
-  async findByCreator(userId: number): Promise<IssueEntity[]> {
-    return await this.issueRepo.find({
-      where: {
-        userId,
-      },
-    });
-  }
-
-  async findOne(id: number): Promise<IssueEntity> {
+  async findById(id: number): Promise<Issue> {
     return await this.issueRepo.findOne(id);
   }
 
-  async create(task: IssueEntity): Promise<IssueEntity> {
+  async create(task: Issue): Promise<Issue> {
     return await this.issueRepo.save(task);
   }
 
-  async update(task: IssueEntity): Promise<UpdateResult> {
+  async update(task: Issue): Promise<UpdateResult> {
     return await this.issueRepo.update(task.id, task);
   }
 

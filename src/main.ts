@@ -1,9 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as config from 'config';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
+  const logger = new Logger('main');
   const app = await NestFactory.create(AppModule);
+  const serverConfig = config.get('server');
+
   app.enableCors();
 
   /**
@@ -17,6 +22,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(serverConfig.port);
+  logger.log(`Application listening on port ${serverConfig.port}`);
 }
 bootstrap();

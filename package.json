@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^6.7.2",
+    "@nestjs/config": "^0.2.2",
     "@nestjs/core": "^6.7.2",
     "@nestjs/jwt": "^6.1.1",
     "@nestjs/passport": "^6.1.1",
@@ -30,6 +31,7 @@
     "bcryptjs": "^2.4.3",
     "class-transformer": "latest",
     "class-validator": "latest",
+    "config": "^3.2.5",
     "express-rate-limit": "^5.0.0",
     "http-status-codes": "^1.4.0",
     "mysql": "^2.17.1",

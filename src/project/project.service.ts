@@ -1,20 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { ProjectEntity } from './project.entity';
+import { Project } from './project.entity';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    @InjectRepository(ProjectEntity)
-    private readonly projectRepo: Repository<ProjectEntity>,
+    @InjectRepository(Project)
+    private readonly projectRepo: Repository<Project>,
   ) {}
 
-  async findAll(): Promise<ProjectEntity[]> {
+  async findAll(): Promise<Project[]> {
     return await this.projectRepo.find();
   }
 
-  async findByCreator(creatorId: number): Promise<ProjectEntity[]> {
+  async findByCreator(creatorId: number): Promise<Project[]> {
     return await this.projectRepo.find({
       where: {
         creatorId,
@@ -22,15 +22,15 @@ export class ProjectService {
     });
   }
 
-  async findOne(id: number): Promise<ProjectEntity> {
+  async findOne(id: number): Promise<Project> {
     return await this.projectRepo.findOne(id);
   }
 
-  async create(project: ProjectEntity): Promise<ProjectEntity> {
+  async create(project: Project): Promise<Project> {
     return await this.projectRepo.save(project);
   }
 
-  async update(project: ProjectEntity): Promise<UpdateResult> {
+  async update(project: Project): Promise<UpdateResult> {
     return await this.projectRepo.update(project.id, project);
   }
 

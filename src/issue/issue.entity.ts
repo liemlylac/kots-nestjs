@@ -1,18 +1,10 @@
 import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,
 } from 'typeorm';
-import { ProjectEntity } from '../project/project.entity';
-import { UserEntity } from '../user/user.entity';
+import { IssueStatus } from './issue-status.enum';
 
 @Entity({name: 'issue'})
-export class IssueEntity {
+export class Issue {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,16 +14,8 @@ export class IssueEntity {
   @Column({type: 'text', nullable: true})
   description: string;
 
-  @ManyToOne(() => ProjectEntity, project => project.issues)
-  @JoinColumn({ name: 'project_id' })
-  project: ProjectEntity;
-
-  @ManyToOne(() => UserEntity, user => user.issuesCreated)
-  @JoinColumn({ name: 'creator_id' })
-  creator: UserEntity;
-
-  @ManyToMany(() => UserEntity, user => user.issuesAssigned)
-  assignee: UserEntity[];
+  @Column({name: 'status', type: 'varchar'})
+  status: IssueStatus;
 
   @Column({name: 'start_date', type: 'datetime'})
   startDate: Date;
@@ -50,5 +34,4 @@ export class IssueEntity {
 
   @UpdateDateColumn({name: 'updated_at'})
   updatedAt: Date;
-
 }
