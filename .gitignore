@@ -18,7 +18,14 @@ lerna-debug.log*
 /.nyc_output
 
 # IDEs and editors
-/.idea
+# Jetbrains IDE
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+!.idea/dictionaries/kots.xml
+
 .project
 .classpath
 .c9/
