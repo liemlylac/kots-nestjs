@@ -18,11 +18,7 @@ describe('AppController (e2e)', () => {
   it('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
-      .expect(404)
-      .expect({statusCode: 404, error: 'Not Found'});
-  });
-
-  afterAll(async () => {
-    await app.close();
+      .expect(200)
+      .expect('Hello World!');
   });
 });

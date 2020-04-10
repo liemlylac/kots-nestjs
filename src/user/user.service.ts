@@ -44,7 +44,7 @@ export class UserService {
   }
 
   async update(user: UserEntity): Promise<UpdateResult> {
-    return await this.userEntityRepository.update(user.id, user);
+    return await this.userEntityRepository.update(user.uuid, user);
   }
 
   async delete(id: number): Promise<DeleteResult> {

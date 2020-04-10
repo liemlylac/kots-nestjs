@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  mysqldb:
+    image: mysql:5.7
+    container_name: kots_db
+    restart: always
+    ports:
+      - '3306:3306'
+    volumes:
+    - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kotsdb
+      MYSQL_USER: kots
+      MYSQL_PASSWORD: kotsSecret
+volumes:
+  db_data: {}

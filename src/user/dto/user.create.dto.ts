@@ -23,12 +23,4 @@ export class UserCreateDto {
   @IsOptional()
   @IsString()
   phone: string;
-
-  constructor(displayName, username, password, email = null, phone = null) {
-    this.displayName = displayName;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.phone = phone;
-  }
 }

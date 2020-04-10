@@ -17,6 +17,7 @@
             "migration/*.js"
         ],
         "cli": {
+            "entitiesDir": "**/*.entity{.ts,.js}",
             "migrationsDir": "migration"
         },
         "logging": false

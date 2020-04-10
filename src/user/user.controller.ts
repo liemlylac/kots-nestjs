@@ -16,7 +16,6 @@ import { UserEntity } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { UserCreateDto } from './dto/user.create.dto';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { UserCreateRo } from './ro/user.create.ro';
 
 @Controller('user')
 export class UserController {
@@ -42,7 +41,7 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @ApiCreatedResponse({type: UserCreateRo})
+  @ApiCreatedResponse()
   @Post()
   create(@Body() userCreateDto: UserCreateDto): Promise<UserEntity> {
     return this.userService.create(userCreateDto);
