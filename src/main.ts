@@ -13,6 +13,9 @@ async function bootstrap() {
     .setTitle('Kots Software')
     .setDescription('The #100 software development tool used by agile teams')
     .setVersion('0.0.1')
+    .setContact('Liem Vo', null, 'liemlylac@gmail.com')
+    .addBasicAuth()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

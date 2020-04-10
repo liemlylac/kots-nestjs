@@ -5,7 +5,7 @@ import { Exclude } from 'class-transformer';
 export class UserEntity {
 
   @PrimaryGeneratedColumn()
-  uuid: number;
+  id: number;
 
   @Column({ name: 'display_name', type: 'varchar', length: 255 })
   displayName: string;
@@ -13,8 +13,8 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   username: string;
 
-  @Column({ type: 'varchar', length: 255 })
   @Exclude()
+  @Column({ type: 'varchar', length: 255 })
   password: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })

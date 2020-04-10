@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './user.entity';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { UserCreateDto } from './dto/user.create.dto';
-import { UserEntityRepository } from './user.entity.repository';
+import { UserEntity } from './user.entity';
+import { UserRepository } from './user.repository';
+import { RegisterDto } from '../auth/dto/register.dto';
 
 @Injectable()
 export class UserService {
@@ -11,43 +10,27 @@ export class UserService {
   private readonly saltRounds = 10;
 
   constructor(
-    private readonly userEntityRepository: UserEntityRepository,
+    private readonly userRepo: UserRepository,
   ) {}
 
-  async findAll(): Promise<UserEntity[]> {
-    return await this.userEntityRepository.find();
-  }
-
-  async findByUsername(username: string): Promise<UserEntity> {
-    return await this.userEntityRepository.findOne({
-      where: {
-        username,
-      },
-    });
-  }
-
-  async findOne(id: number): Promise<UserEntity> {
-    return await this.userEntityRepository.findOne(id);
-  }
-
-  async create(userCreateDto: UserCreateDto): Promise<UserEntity> {
-    userCreateDto.password = await this.getHash(userCreateDto.password);
-    return await this.userEntityRepository.save(userCreateDto);
-  }
-
-  async getHash(password: string|undefined): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, this.saltRounds);
   }
 
-  async compareHash(password: string|undefined, hash: string|undefined): Promise<boolean> {
+  async compareHash(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
 
-  async update(user: UserEntity): Promise<UpdateResult> {
-    return await this.userEntityRepository.update(user.uuid, user);
+  async getByUsername(username: string): Promise<UserEntity> {
+    return await this.userRepo.getByUsername(username);
   }
 
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.userEntityRepository.delete(id);
+  async create(user: RegisterDto): Promise<UserEntity> {
+    user.password = await this.hashPassword(user.password);
+    return await this.userRepo.save(user);
+  }
+
+  async update(id, user: Partial<UserEntity>) {
+    await this.userRepo.update(id, user);
   }
 }
