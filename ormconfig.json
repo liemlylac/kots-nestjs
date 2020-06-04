@@ -5,8 +5,8 @@
         "type": "mysql",
         "host": "localhost",
         "port": 3306,
-        "username": "root",
-        "password": "root",
+        "username": "kots",
+        "password": "kotsSecret",
         "database": "kotsdb",
         "entities": [
             "dist/**/*.entity{.ts,.js}"
