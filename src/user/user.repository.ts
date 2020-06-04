@@ -1,8 +1,8 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 
-@EntityRepository(UserEntity)
-export class UserRepository extends Repository<UserEntity> {
+@EntityRepository(User)
+export class UserRepository extends Repository<User> {
 
   /**
    * Get active user by username

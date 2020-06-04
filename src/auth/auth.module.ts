@@ -6,6 +6,8 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { LocalStrategy } from './passport/local.strategy';
 import { UserModule } from '../user/user.module';
+import { CryptService } from './crypt.service';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [
@@ -18,10 +20,12 @@ import { UserModule } from '../user/user.module';
   ],
   providers: [
     AuthService,
+    CryptService,
+    TokenService,
     LocalStrategy,
     JwtStrategy
   ],
   controllers: [AuthController],
-  exports: [AuthService],
+  exports: [AuthService, CryptService],
 })
 export class AuthModule {}

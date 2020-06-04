@@ -1,36 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
-import { UserEntity } from './user.entity';
+
+import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { RegisterDto } from '../auth/dto/register.dto';
+import { Register } from '../auth/dto/register.dto';
+import { CryptService } from '../auth/crypt.service';
 
 @Injectable()
 export class UserService {
 
-  private readonly saltRounds = 10;
-
   constructor(
     private readonly userRepo: UserRepository,
+    private readonly cryptService: CryptService,
   ) {}
 
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, this.saltRounds);
-  }
-
-  async compareHash(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash);
-  }
-
-  async getByUsername(username: string): Promise<UserEntity> {
+  async getByUsername(username: string): Promise<User> {
     return await this.userRepo.getByUsername(username);
   }
 
-  async create(user: RegisterDto): Promise<UserEntity> {
-    user.password = await this.hashPassword(user.password);
+  async create(user: Register): Promise<User> {
+    user.password = await this.cryptService.hashPassword(user.password);
     return await this.userRepo.save(user);
   }
 
-  async update(id, user: Partial<UserEntity>) {
+  async update(id, user: Partial<User>) {
     await this.userRepo.update(id, user);
   }
 }

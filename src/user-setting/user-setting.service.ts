@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from '../user/user.entity';
+import { User } from '../user/user.entity';
 import { UserSettingRepository } from './user-setting.repository';
 import { USER_SETTING_DEFAULT } from './default-user-setting.const';
 
@@ -22,7 +22,7 @@ export class UserSettingService {
     return settings;
   }
 
-  async getSetting(user: UserEntity, keys: string | string[]): Promise<string> {
+  async getSetting(user: User, keys: string | string[]): Promise<string> {
     const userSetting = await this.userSettingRepo.getSetting(user.id, keys);
     if (!userSetting) {
       return this.getDefaultSettingValue(keys);

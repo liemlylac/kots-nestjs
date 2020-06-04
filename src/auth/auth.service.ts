@@ -1,14 +1,16 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { RegisterDto } from './dto/register.dto';
+import { Register } from './dto/register.dto';
+import { CryptService } from './crypt.service';
 import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/user.entity';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AuthService {
     constructor(
-      private readonly usersService: UserService,
       private readonly jwtService: JwtService,
+      private readonly cryptService: CryptService,
+      private readonly usersService: UserService,
     ) {
     }
 
@@ -20,7 +22,7 @@ export class AuthService {
      */
     async validateLogin(username, password) {
         const user = await this.usersService.getByUsername(username);
-        if (user && await this.usersService.compareHash(password, user.password)) {
+        if (user && await this.cryptService.compareHash(password, user.password)) {
             return user
         }
         return null;
@@ -31,7 +33,7 @@ export class AuthService {
      *
      * @param user
      */
-    async login(user: UserEntity): Promise<any> {
+    async login(user: User): Promise<any> {
         const payload = { userId: user.id, username: user.username };
         return {
             displayName: user.displayName,
@@ -45,7 +47,7 @@ export class AuthService {
      *
      * @param register
      */
-    async register(register: RegisterDto): Promise<any> {
+    async register(register: Register): Promise<any> {
         const existingUser = await this.usersService.getByUsername(register.username);
         if (existingUser && existingUser.id) {
             throw new ConflictException('User with this username is already exists');

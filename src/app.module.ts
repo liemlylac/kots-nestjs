@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import generalConfig from './config/general.config';
 import databaseConfig from './config/database.config';
+import authConfig from './config/auth.config';
 import { UserModule } from './user/user.module';
 import { HttpExceptionFilter } from './http-exception.filter';
 
@@ -12,7 +13,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [generalConfig, databaseConfig],
+      load: [generalConfig, databaseConfig, authConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -25,7 +26,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
         password: configService.get<string>('db.password'),
         database: configService.get<string>('db.database'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: false,
+        synchronize: true,
         logging: configService.get<boolean>('db.logging'),
         migrationsTableName: 'migration',
         migrations: [__dirname + '/migration/*{.ts, .js}'],

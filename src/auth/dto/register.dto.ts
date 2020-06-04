@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { LoginDto } from './login.dto';
+import { Login } from './login.dto';
 
-export class RegisterDto extends LoginDto{
+export class Register extends Login{
 
   @ApiProperty({
     type: String,
