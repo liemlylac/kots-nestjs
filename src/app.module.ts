@@ -1,20 +1,15 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import generalConfig from './config/general.config';
-import databaseConfig from './config/database.config';
-import authConfig from './config/auth.config';
+import { HttpExceptionFilter } from './core/filter/http-exception.filter';
+import { ConfigModule } from './config/config.module';
 import { UserModule } from './user/user.module';
-import { HttpExceptionFilter } from './http-exception.filter';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [generalConfig, databaseConfig, authConfig],
-    }),
+    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
