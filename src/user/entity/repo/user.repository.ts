@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -10,6 +10,6 @@ export class UserRepository extends Repository<User> {
    * @param username
    */
   getByUsername(username) {
-    return this.findOne({ where: { username, active: true } });
+    return this.findOne({ username, active: true });
   }
 }

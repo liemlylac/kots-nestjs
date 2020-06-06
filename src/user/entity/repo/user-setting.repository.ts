@@ -1,5 +1,5 @@
 import { EntityRepository, Repository, In } from 'typeorm';
-import { UserSettingEntity } from './user-setting.entity';
+import { UserSettingEntity } from '../user-setting.entity';
 
 @EntityRepository(UserSettingEntity)
 export class UserSettingRepository extends Repository<UserSettingEntity>{

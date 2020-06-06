@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '../user/user.entity';
-import { UserSettingRepository } from './user-setting.repository';
-import { USER_SETTING_DEFAULT } from './default-user-setting.const';
+import { User } from '../entity/user.entity';
+import { UserSettingRepository } from '../entity/repo/user-setting.repository';
+import { USER_SETTING_DEFAULT } from '../default-user-setting.const';
 
 @Injectable()
 export class UserSettingService {

@@ -11,12 +11,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse, ApiNoContentResponse } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { UpdateUser } from './dto/update-user.dto';
-import { User } from './user.entity';
+import { UserService } from '../service/user.service';
+import { UpdateUser } from '../dto/update-user.dto';
+import { User } from '../entity/user.entity';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard())
 @ApiBearerAuth()
 @ApiTags('User')
 export class UserController {
