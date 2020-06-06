@@ -3,10 +3,11 @@ import { Request, Response } from 'express';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  // noinspection JSUnusedGlobalSymbols
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const response: Response = ctx.getResponse<Response>();
+    const request: Request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
     response
