@@ -1,15 +1,15 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Register } from './dto/register.dto';
-import { CryptService } from './crypt.service';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
+import { Register } from '../dto/register.dto';
+import { HashService } from './hash.service';
+import { UserService } from '../../user/service/user.service';
+import { User } from '../../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
     constructor(
       private readonly jwtService: JwtService,
-      private readonly cryptService: CryptService,
+      private readonly hashService: HashService,
       private readonly usersService: UserService,
     ) {
     }
@@ -22,7 +22,7 @@ export class AuthService {
      */
     async validateLogin(username, password) {
         const user = await this.usersService.getByUsername(username);
-        if (user && await this.cryptService.compareHash(password, user.password)) {
+        if (user && await this.hashService.compareHash(password, user.password)) {
             return user
         }
         return null;

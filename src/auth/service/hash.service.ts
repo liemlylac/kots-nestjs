@@ -3,7 +3,7 @@ import * as bcrypt from 'bcryptjs';
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
-export class CryptService {
+export class HashService {
   private readonly saltRounds = 10;
   private readonly pepper: string;
 
@@ -14,7 +14,6 @@ export class CryptService {
   }
 
   async hashPassword(password: string): Promise<string> {
-
     return bcrypt.hash(password + this.pepper, this.saltRounds);
   }
 

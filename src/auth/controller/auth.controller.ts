@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { Login } from './dto/login.dto';
-import { AuthService } from './auth.service';
-import { Register } from './dto/register.dto';
+import { Login } from '../dto/login.dto';
+import { AuthService } from '../service/auth.service';
+import { Register } from '../dto/register.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
