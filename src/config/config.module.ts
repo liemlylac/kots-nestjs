@@ -1,8 +1,8 @@
 import { Module, DynamicModule } from '@nestjs/common';
 import { ConfigModule as NestConfigModule, ConfigService } from '@nestjs/config';
-import generalConfig from './general.config';
-import databaseConfig from './database.config';
-import authConfig from './auth.config';
+import generalConfig from './config/general.config';
+import databaseConfig from './config/database.config';
+import authConfig from './config/auth.config';
 
 @Module({})
 export class ConfigModule {
