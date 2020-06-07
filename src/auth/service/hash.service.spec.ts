@@ -51,7 +51,9 @@ describe('class HashService', () => {
     it('should return a separate hash password for each user', async () => {
       expect(await hashService.hashPassword(obj.password)).not.toEqual(obj.hashPassword);
     });
+  });
 
+  describe('hashPassword()', () => {
     it('should return true if input right password', async () => {
       expect(await hashService.compareHash(obj.password, obj.hashPassword)).toBe(true);
     });
