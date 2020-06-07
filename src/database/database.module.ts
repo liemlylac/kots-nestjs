@@ -1,9 +1,8 @@
-import { DynamicModule, Module, Global } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '../config/config.module';
 
-@Global()
 @Module({})
 export class DatabaseModule {
   static forRoot(): DynamicModule {
