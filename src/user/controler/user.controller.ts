@@ -7,14 +7,16 @@ import {
   Request,
   UseGuards,
   UseInterceptors,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags, ApiOperation } from '@nestjs/swagger';
-import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import { UserService } from '../service/user.service';
+import { UpdateUser } from '../dto/update-user.dto';
+import { User } from '../entity/user.entity';
 
 @Controller('user')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard())
 @ApiBearerAuth()
 @ApiTags('User')
 export class UserController {
@@ -23,15 +25,18 @@ export class UserController {
   ) {}
 
   @ApiOperation({ description: 'Get user data' })
-  @Get('profile')
+  @ApiOkResponse({ type: User })
   @UseInterceptors(ClassSerializerInterceptor)
+  @Get('profile')
   getProfile(@Request() req) {
     return this.userService.getByUsername(req.user.username);
   }
 
   @ApiOperation({ description: 'User update self data' })
+  @ApiNoContentResponse({ description: 'Api will response empty body' })
   @Put('')
-  update(@Request() request, @Body() user: UpdateUserDto) {
+  @HttpCode(204)
+  update(@Request() request,@Body() user: UpdateUser) {
     return this.userService.update(request.user.userId, user);
   }
 }

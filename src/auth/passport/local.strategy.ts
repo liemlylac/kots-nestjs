@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../service/auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -13,8 +13,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
    });
   }
 
+  //noinspection JSUnusedGlobalSymbols
   /**
    * This function will be called by PassportStrategy
+   *
+   * @note noinspection adding to avoid inspection unused method
    *
    * @param username string
    * @param password string

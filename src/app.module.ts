@@ -1,21 +1,24 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { AuthModule } from './auth/auth.module';
+import { HttpExceptionFilter } from './core/filter/http-exception.filter';
+import { ConfigModule } from './config/config.module';
+import { DatabaseModule } from './database/database.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
+    ConfigModule.forRoot(),
+    DatabaseModule.forRoot(),
     AuthModule,
     UserModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter
-    }
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
-export class AppModule {}
+export class AppModule {
+}
