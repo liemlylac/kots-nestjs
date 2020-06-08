@@ -59,11 +59,11 @@ jobs:
       - *install-deps
       - *build-packages
       - *run-unit-tests
-      - run:
-          name: Collect coverage
-          command: npm run coverage
-      - store_artifacts:
-          path: coverage
+#      - run:
+#          name: Collect coverage
+#          command: npm run coverage
+#      - store_artifacts:
+#          path: coverage
 
   test_node_10:
     <<: *unit-tests-template
@@ -86,9 +86,9 @@ jobs:
       - run:
           name: Lint
           command: npm run lint
-      - run:
-          name: Lint commit
-          command: ./node_modules/.bin/commitlint-circle -c .commitlintrc.json
+#      - run:
+#          name: Lint commit
+#          command: ./node_modules/.bin/commitlint-circle -c .commitlintrc.json
 
 workflows:
   version: 2
