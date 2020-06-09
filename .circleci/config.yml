@@ -30,7 +30,7 @@ jobs:
   build:
     working_directory: ~/nest
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - run:
@@ -49,10 +49,10 @@ jobs:
           name: Build
           command: npm run build
 
-  test_node_12:
+  test_node_14:
     working_directory: ~/nest
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - *restore-cache
@@ -65,20 +65,20 @@ jobs:
 #      - store_artifacts:
 #          path: coverage
 
+  test_node_12:
+    <<: *unit-tests-template
+    docker:
+      - image: circleci/node:12
+
   test_node_10:
     <<: *unit-tests-template
     docker:
       - image: circleci/node:10
 
-  test_node_8:
-    <<: *unit-tests-template
-    docker:
-      - image: circleci/node:8
-
   lint:
     working_directory: ~/nest
     docker:
-      - image: circleci/node:12
+      - image: circleci/node:14
     steps:
       - checkout
       - *restore-cache
@@ -95,13 +95,13 @@ workflows:
   build-and-test:
     jobs:
       - build
+      - test_node_14:
+          requires:
+            - build
       - test_node_12:
           requires:
             - build
       - test_node_10:
-          requires:
-            - build
-      - test_node_8:
           requires:
             - build
       - lint:
