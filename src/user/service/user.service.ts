@@ -7,7 +7,6 @@ import { HashService } from '../../auth/service/hash.service';
 
 @Injectable()
 export class UserService {
-
   constructor(
     private readonly userRepo: UserRepository,
     private readonly hashService: HashService,

@@ -6,10 +6,7 @@ import { CONFIG } from '../../config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-
-  constructor(
-    private readonly configService: ConfigService
-  ) {
+  constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: CONFIG.AUTH.JWT.IGNORE_EXPIRATION,
@@ -26,6 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param payload
    */
   async validate(payload: any) {
-    return { userId: payload.userId, username: payload.username};
+    return { userId: payload.userId, username: payload.username };
   }
 }

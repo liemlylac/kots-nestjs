@@ -1,5 +1,8 @@
 import { Module, DynamicModule } from '@nestjs/common';
-import { ConfigModule as NestConfigModule, ConfigService } from '@nestjs/config';
+import {
+  ConfigModule as NestConfigModule,
+  ConfigService,
+} from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { authConfig, authConfigSchema } from './config/auth.config';
 import { databaseConfig, databaseConfigSchema } from './config/database.config';
@@ -22,7 +25,7 @@ export class ConfigModule {
         }),
       ],
       providers: [ConfigService],
-      exports: [ConfigService]
-    }
+      exports: [ConfigService],
+    };
   }
 }

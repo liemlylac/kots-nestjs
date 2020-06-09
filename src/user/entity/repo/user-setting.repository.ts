@@ -2,16 +2,18 @@ import { EntityRepository, Repository, In } from 'typeorm';
 import { UserSettingEntity } from '../user-setting.entity';
 
 @EntityRepository(UserSettingEntity)
-export class UserSettingRepository extends Repository<UserSettingEntity>{
-
+export class UserSettingRepository extends Repository<UserSettingEntity> {
   /**
    * Getting user setting by key
    *
    * @param userId string
    * @param keys string
    */
-  getSetting(userId: string, keys?: string | string[]): Promise<UserSettingEntity> {
-    const options: any = { userId};
+  getSetting(
+    userId: string,
+    keys?: string | string[],
+  ): Promise<UserSettingEntity> {
+    const options: any = { userId };
     if (keys) {
       if (Array.isArray(keys) && keys.length > 0) {
         options.key = In(keys);
@@ -19,7 +21,7 @@ export class UserSettingRepository extends Repository<UserSettingEntity>{
         options.key = keys;
       }
     }
-    return this.findOne({ where: options})
+    return this.findOne({ where: options });
   }
 
   saveSetting(userId: string, key: string, value: string) {

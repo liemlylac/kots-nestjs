@@ -29,9 +29,9 @@ export class DatabaseModule {
               migrationsDir: '/migration',
             },
           }),
-        })
+        }),
       ],
-      exports: [TypeOrmModule]
-    }
+      exports: [TypeOrmModule],
+    };
   }
 }

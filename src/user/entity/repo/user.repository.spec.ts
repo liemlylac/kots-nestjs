@@ -3,7 +3,6 @@ import { UserRepository } from './user.repository';
 import { User } from '../user.entity';
 
 describe('class UserRepository', () => {
-
   let userRepository: UserRepository;
   const testDateData = new Date();
   const users: User[] = [
@@ -29,17 +28,14 @@ describe('class UserRepository', () => {
       createDate: testDateData,
       updateDate: testDateData,
     },
-  ]
+  ];
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UserRepository,
-      ]
+      providers: [UserRepository],
     }).compile();
 
     userRepository = module.get<UserRepository>(UserRepository);
-
   });
 
   it('should be defined', () => {
@@ -48,11 +44,15 @@ describe('class UserRepository', () => {
 
   describe('getByUsername()', () => {
     beforeAll(async () => {
-      jest.spyOn(userRepository, 'findOne').mockImplementation(async (condition) => {
-        return users.find(user =>
-          user.username === condition.username && user.active === condition.active
-        );
-      });
+      jest
+        .spyOn(userRepository, 'findOne')
+        .mockImplementation(async condition => {
+          return users.find(
+            user =>
+              user.username === condition.username &&
+              user.active === condition.active,
+          );
+        });
     });
 
     it('should return user with username and is active', async () => {
@@ -60,11 +60,13 @@ describe('class UserRepository', () => {
     });
 
     it('should not return with username and is inactive', async () => {
-      expect(await userRepository.getByUsername('john_doe')).not.toEqual(users[1]);
+      expect(await userRepository.getByUsername('john_doe')).not.toEqual(
+        users[1],
+      );
     });
 
     it('should not return user is not exist', async () => {
       expect(await userRepository.getByUsername('no_username')).toBeUndefined();
     });
   });
-})
+});

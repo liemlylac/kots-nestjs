@@ -15,15 +15,10 @@ describe('Auth Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
-        JwtModule.registerAsync({ useClass: JwtConfigService })
+        JwtModule.registerAsync({ useClass: JwtConfigService }),
       ],
       controllers: [AuthController],
-      providers: [
-        HashService,
-        AuthService,
-        UserService,
-        UserRepository
-      ]
+      providers: [HashService, AuthService, UserService, UserRepository],
     }).compile();
 
     authController = module.get<AuthController>(AuthController);

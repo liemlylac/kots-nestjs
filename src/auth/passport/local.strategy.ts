@@ -6,11 +6,11 @@ import { AuthService } from '../service/auth.service';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
-   super({
-     usernameField: 'username',
-     passwordField: 'password',
-     passReqToCallback: false
-   });
+    super({
+      usernameField: 'username',
+      passwordField: 'password',
+      passReqToCallback: false,
+    });
   }
 
   //noinspection JSUnusedGlobalSymbols

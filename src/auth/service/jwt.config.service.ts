@@ -4,10 +4,7 @@ import { JwtOptionsFactory, JwtModuleOptions } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtConfigService implements JwtOptionsFactory {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
-  }
+  constructor(private readonly configService: ConfigService) {}
 
   // noinspection JSUnusedGlobalSymbols
   /**

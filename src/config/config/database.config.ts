@@ -7,7 +7,7 @@ export const databaseConfigSchema = {
   DATABASE_PASSWORD: Joi.string().default('kotsSecret'),
   DATABASE_DATABASE: Joi.string().default('kotsdb'),
   DATABASE_LOGGING: Joi.boolean().default(true),
-}
+};
 
 export function databaseConfig() {
   return {
@@ -18,6 +18,6 @@ export function databaseConfig() {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
       logging: process.env.DATABASE_LOGGING + ''.toLowerCase() === 'true',
-    }
-  }
+    },
+  };
 }

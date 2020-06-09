@@ -1,3 +1,1 @@
-export class LoggerService {
-
-}
+export class LoggerService {}

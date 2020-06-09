@@ -10,5 +10,4 @@ describe('class User', () => {
   it('should be defined', () => {
     expect(user).toBeDefined();
   });
-
 });

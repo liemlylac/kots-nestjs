@@ -10,7 +10,6 @@ import { User } from '../../user/entity/user.entity';
 import { Login } from '../dto/login.dto';
 
 describe('AuthService', () => {
-
   let authService: AuthService;
   let hashService: HashService;
   let userRepository: UserRepository;
@@ -19,8 +18,8 @@ describe('AuthService', () => {
 
   const login: Login = {
     username: 'johndoe',
-    password: 'hard!secret-password'
-  }
+    password: 'hard!secret-password',
+  };
 
   const users: User[] = [
     {
@@ -45,30 +44,29 @@ describe('AuthService', () => {
       createDate: testDateData,
       updateDate: testDateData,
     },
-  ]
+  ];
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
-        JwtModule.registerAsync({ useClass: JwtConfigService })
+        JwtModule.registerAsync({ useClass: JwtConfigService }),
       ],
-      providers: [
-        HashService,
-        AuthService,
-        UserService,
-        UserRepository
-      ]
+      providers: [HashService, AuthService, UserService, UserRepository],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
     hashService = module.get<HashService>(HashService);
     userRepository = module.get<UserRepository>(UserRepository);
-    jest.spyOn(userRepository, 'findOne').mockImplementation(async (condition) => {
-      return users.find(user =>
-        user.username === condition.username && user.active === condition.active
-      );
-    });
+    jest
+      .spyOn(userRepository, 'findOne')
+      .mockImplementation(async condition => {
+        return users.find(
+          user =>
+            user.username === condition.username &&
+            user.active === condition.active,
+        );
+      });
     users[0].password = await hashService.hashPassword(login.password);
     users[1].password = await hashService.hashPassword(login.password);
   });
@@ -79,7 +77,9 @@ describe('AuthService', () => {
 
   describe('validateLogin', () => {
     it('should return User if match username and password', async () => {
-      expect(await authService.validateLogin(login.username, login.password)).toEqual(users[0]);
+      expect(
+        await authService.validateLogin(login.username, login.password),
+      ).toEqual(users[0]);
     });
   });
 });

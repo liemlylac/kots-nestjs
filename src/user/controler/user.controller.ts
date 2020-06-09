@@ -10,7 +10,13 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiOkResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiOkResponse,
+  ApiNoContentResponse,
+} from '@nestjs/swagger';
 import { UserService } from '../service/user.service';
 import { UpdateUser } from '../dto/update-user.dto';
 import { User } from '../entity/user.entity';
@@ -20,9 +26,7 @@ import { User } from '../entity/user.entity';
 @ApiBearerAuth()
 @ApiTags('User')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ description: 'Get user data' })
   @ApiOkResponse({ type: User })
@@ -36,7 +40,7 @@ export class UserController {
   @ApiNoContentResponse({ description: 'Api will response empty body' })
   @Put('')
   @HttpCode(204)
-  update(@Request() request,@Body() user: UpdateUser) {
+  update(@Request() request, @Body() user: UpdateUser) {
     return this.userService.update(request.user.userId, user);
   }
 }

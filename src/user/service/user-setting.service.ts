@@ -5,18 +5,14 @@ import { USER_SETTING_DEFAULT } from '../default-user-setting.const';
 
 @Injectable()
 export class UserSettingService {
+  constructor(private readonly userSettingRepo: UserSettingRepository) {}
 
-  constructor(
-    private readonly userSettingRepo: UserSettingRepository,
-  ) {
-  }
-
-  protected getDefaultSettingValue(keys: string|string[]): string|any {
+  protected getDefaultSettingValue(keys: string | string[]): string | any {
     if (!Array.isArray(keys)) {
       return USER_SETTING_DEFAULT[keys] ?? null;
     }
     const settings: any = {};
-    for(const key of keys) {
+    for (const key of keys) {
       settings.key = this.getDefaultSettingValue(key);
     }
     return settings;

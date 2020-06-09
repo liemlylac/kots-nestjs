@@ -1,3 +1,1 @@
-export class EmailService {
-
-}
+export class EmailService {}

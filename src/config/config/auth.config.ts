@@ -7,21 +7,21 @@ export const authConfigSchema = {
   JWT_REFRESH_SECRET_KEY: Joi.string().default('kotsRefreshJwtSecretKey'),
   JWT_ACCESS_KEY_LIFE_TIME: Joi.number().default(28800),
   JWT_REFRESH_SECRET_KEY_LIFE_TIME: Joi.number().default(2592000),
-}
+};
 
 export function authConfig() {
   return {
     auth: {
       pwd: {
         pepper: process.env.AUTH_PWD_PEPPER,
-        resetTokenLifeTime: process.env.AUTH_PWD_RESET_TOKEN_LIFE_TIME
+        resetTokenLifeTime: process.env.AUTH_PWD_RESET_TOKEN_LIFE_TIME,
       },
       jwt: {
         accessSecretKey: process.env.JWT_ACCESS_SECRET_KEY,
         refreshSecretKey: process.env.JWT_REFRESH_SECRET_KEY,
         accessKeyLifetime: process.env.JWT_ACCESS_KEY_LIFE_TIME,
         refreshSecretKeyLifetime: process.env.JWT_REFRESH_SECRET_KEY_LIFE_TIME,
-      }
-    }
-  }
+      },
+    },
+  };
 }

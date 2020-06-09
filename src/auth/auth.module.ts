@@ -12,7 +12,7 @@ import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
-    PassportModule.register({defaultStrategy: 'jwt'}),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({ useClass: JwtConfigService }),
     UserModule,
   ],
@@ -21,7 +21,7 @@ import { UserModule } from '../user/user.module';
     HashService,
     TokenService,
     LocalStrategy,
-    JwtStrategy
+    JwtStrategy,
   ],
   controllers: [AuthController],
   exports: [AuthService, HashService],

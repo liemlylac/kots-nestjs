@@ -15,14 +15,14 @@ describe('class JwtConfigService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [JwtConfigService, ConfigService]
+      providers: [JwtConfigService, ConfigService],
     }).compile();
 
     jwtConfigService = module.get<JwtConfigService>(JwtConfigService);
     configService = module.get<ConfigService>(ConfigService);
 
     // mock method of object with parameter
-    jest.spyOn(configService, 'get').mockImplementation((configKey) => {
+    jest.spyOn(configService, 'get').mockImplementation(configKey => {
       if (configKey === 'auth.jwt.accessSecretKey') {
         return jwtOptions.secret;
       }
@@ -40,6 +40,6 @@ describe('class JwtConfigService', () => {
   describe('createJwtOptions()', () => {
     it('shout return jwt options', async () => {
       expect(jwtConfigService.createJwtOptions()).toStrictEqual(jwtOptions);
-    })
+    });
   });
 });

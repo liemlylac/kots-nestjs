@@ -3,5 +3,5 @@ export enum USER_SETTING_KEY {
 }
 
 export const USER_SETTING_DEFAULT = {
-  theme: 'default'
-}
+  theme: 'default',
+};

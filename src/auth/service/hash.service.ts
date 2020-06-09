@@ -1,15 +1,13 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { ConfigService } from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class HashService {
   private readonly saltRounds = 10;
   private readonly pepper: string;
 
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
+  constructor(private readonly configService: ConfigService) {
     this.pepper = this.configService.get<string>('auth.pepper');
   }
 
