@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Register } from '../dto/register.dto';
+import { LoginRO } from '../ro/login.ro';
 import { HashService } from './hash.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/entity/user.entity';
@@ -21,7 +22,11 @@ export class AuthService {
    */
   async validateLogin(username, password) {
     const user = await this.usersService.getByUsername(username);
-    if (user && (await this.hashService.compareHash(password, user.password))) {
+    if (
+      user &&
+      user.active &&
+      (await this.hashService.compareHash(password, user.password))
+    ) {
       return user;
     }
     return null;
@@ -32,7 +37,7 @@ export class AuthService {
    *
    * @param user
    */
-  async login(user: User): Promise<any> {
+  async login(user: User): Promise<LoginRO> {
     const payload = { userId: user.id, username: user.username };
     return {
       displayName: user.displayName,
@@ -46,7 +51,7 @@ export class AuthService {
    *
    * @param register
    */
-  async register(register: Register): Promise<any> {
+  async register(register: Register): Promise<LoginRO> {
     const existingUser = await this.usersService.getByUsername(
       register.username,
     );

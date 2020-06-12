@@ -1,20 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { HashService } from './hash.service';
-import * as bcrypt from 'bcryptjs';
 
 describe('class HashService', () => {
   let hashService: HashService;
   const configService: ConfigService = new ConfigService();
   const obj = {
     pepper: 'kotsSecretPepper',
-    salt: 'kotsSecretSalt',
-    saltRounds: 10,
+    salt: '$2a$10$rAbkDL9ANLkgStTrHUbN9.',
     password: 'hard!secret-password',
-    hashPassword: '',
+    hashPassword:
+      '$2a$10$rAbkDL9ANLkgStTrHUbN9.1/i65T6YC1xSTRklh8MpwVuR8FV02BW',
   };
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     // Here we mock ConfigService before inject to HashService constructor
     jest.spyOn(configService, 'get').mockImplementation(key => {
       if (key === 'auth.pepper') {
@@ -32,19 +31,27 @@ describe('class HashService', () => {
     }).compile();
 
     hashService = module.get<HashService>(HashService);
-
-    // Business logic when hashing password
-    obj.hashPassword = await bcrypt.hash(
-      obj.password + obj.pepper,
-      obj.saltRounds,
-    );
   });
 
   it('should be defined', () => {
     expect(hashService).toBeDefined();
   });
 
+  describe('getSalt()', () => {
+    it('should return unique salt', async () => {
+      expect(hashService.getSalt()).toEqual(
+        expect.stringMatching(/^\$2[ayb]\$10\$.{22}$/),
+      );
+    });
+  });
+
   describe('hashPassword()', () => {
+    beforeAll(async () => {
+      jest.spyOn(hashService, 'getSalt').mockImplementationOnce(() => {
+        return obj.salt;
+      });
+    });
+
     it('should return a hash password', async () => {
       expect(await hashService.hashPassword(obj.password)).toEqual(
         expect.stringMatching(/^\$2[ayb]\$10\$.{53}$/),

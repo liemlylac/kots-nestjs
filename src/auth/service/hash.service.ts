@@ -4,18 +4,21 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class HashService {
-  private readonly saltRounds = 10;
   private readonly pepper: string;
 
   constructor(private readonly configService: ConfigService) {
     this.pepper = this.configService.get<string>('auth.pepper');
   }
 
-  async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password + this.pepper, this.saltRounds);
+  getSalt(): string {
+    return bcrypt.genSaltSync(10);
   }
 
-  async compareHash(password: string, hash: string): Promise<boolean> {
+  hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password + this.pepper, this.getSalt());
+  }
+
+  compareHash(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password + this.pepper, hash);
   }
 }

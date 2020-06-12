@@ -13,7 +13,7 @@ describe('class JwtConfigService', () => {
     },
   };
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [JwtConfigService, ConfigService],
     }).compile();
@@ -34,7 +34,6 @@ describe('class JwtConfigService', () => {
 
   it('should be defined', () => {
     expect(jwtConfigService).toBeDefined();
-    expect(configService).toBeDefined();
   });
 
   describe('createJwtOptions()', () => {
