@@ -50,7 +50,7 @@ describe('Auth Controller', () => {
 
       const loginRO = new LoginRO();
 
-      jest.spyOn(authService, 'login').mockImplementation(
+      jest.spyOn(authService, 'afterLogin').mockImplementation(
         async (): Promise<LoginRO> => {
           return loginRO;
         },

@@ -135,9 +135,9 @@ describe('AuthService', () => {
     token: signJwt,
   };
 
-  describe('login()', () => {
+  describe('afterLogin()', () => {
     it('should return object include token', async () => {
-      expect(await authService.login(users[0])).toMatchObject(loginRegex);
+      expect(await authService.afterLogin(users[0])).toMatchObject(loginRegex);
     });
   });
 

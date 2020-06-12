@@ -37,7 +37,7 @@ export class AuthService {
    *
    * @param user
    */
-  async login(user: User): Promise<LoginRO> {
+  async afterLogin(user: User): Promise<LoginRO> {
     const payload = { userId: user.id, username: user.username };
     return {
       displayName: user.displayName,
@@ -60,6 +60,6 @@ export class AuthService {
     }
     // If username is available, create a new user and login
     const newUser = await this.usersService.create(register);
-    return this.login(newUser);
+    return this.afterLogin(newUser);
   }
 }
