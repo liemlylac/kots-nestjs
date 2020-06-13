@@ -9,6 +9,15 @@ export class UserRepository extends Repository<User> {
    * @param username
    */
   getByUsername(username) {
-    return this.findOne({ username, active: true });
+    return this.findOne({ username });
+  }
+
+  /**
+   * Get active user by username
+   *
+   * @param email
+   */
+  getByEmail(email) {
+    return this.findOne({ email });
   }
 }
