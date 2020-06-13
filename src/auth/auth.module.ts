@@ -6,6 +6,7 @@ import { JwtStrategy } from './service/passport/jwt.strategy';
 import { LocalStrategy } from './service/passport/local.strategy';
 import { AuthService } from './service/auth.service';
 import { HashService } from './service/hash.service';
+import { CryptoService } from './service/crypto.service';
 import { JwtConfigService } from './service/jwt.config.service';
 import { UserModule } from '../user/user.module';
 
@@ -15,7 +16,13 @@ import { UserModule } from '../user/user.module';
     JwtModule.registerAsync({ useClass: JwtConfigService }),
     UserModule,
   ],
-  providers: [AuthService, HashService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    HashService,
+    CryptoService,
+    LocalStrategy,
+    JwtStrategy,
+  ],
   controllers: [AuthController],
   exports: [AuthService, HashService],
 })
