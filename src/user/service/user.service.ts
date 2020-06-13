@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { UserRepository } from '../entity/repo/user.repository';
 import { Register } from '../../auth/dto/register.dto';
@@ -25,6 +29,15 @@ export class UserService {
   }
 
   /**
+   * Get User by username
+   *
+   * @param email
+   */
+  async getByEmail(email: string): Promise<User> {
+    return await this.userRepo.getByEmail(email);
+  }
+
+  /**
    * Create user account
    *
    * @param user
@@ -48,8 +61,31 @@ export class UserService {
    * @param user
    */
   async update(id: string, user: Partial<User>) {
+    if (user.email) {
+      const existUserWithEmail = await this.userRepo.getByEmail(user.email);
+      if (existUserWithEmail) {
+        throw new BadRequestException('Email Already in Use');
+      }
+    }
+
     try {
       await this.userRepo.update(id, user);
+    } catch (e) {
+      this.logger.error(e);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
+   *
+   * @param id
+   * @param password
+   */
+  async changePassword(id: any, password: string) {
+    const user = new User();
+    user.password = await this.hashService.hashPassword(password);
+    try {
+      return await this.userRepo.update(id, user);
     } catch (e) {
       this.logger.error(e);
       throw new InternalServerErrorException();
