@@ -5,7 +5,7 @@ export const authConfigSchema = {
   AUTH_PWD_RESET_TOKEN_LIFE_TIME: Joi.number().default(86400000),
   JWT_ACCESS_SECRET_KEY: Joi.string().default('kotsJwtSecretKey'),
   JWT_REFRESH_SECRET_KEY: Joi.string().default('kotsRefreshJwtSecretKey'),
-  JWT_ACCESS_KEY_LIFE_TIME: Joi.number().default(28800),
+  JWT_ACCESS_KEY_LIFE_TIME: Joi.number().default(28800000),
   JWT_REFRESH_SECRET_KEY_LIFE_TIME: Joi.number().default(2592000),
 };
 
