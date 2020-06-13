@@ -8,6 +8,7 @@ import {
   HttpCode,
   Query,
   ValidationPipe,
+  Get,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -57,7 +58,7 @@ export class AuthController {
   @Post('request-password')
   async requestPassword(@Body('email') email: string, @Res() res) {
     const token = await this.authService.requestPassword(email);
-    return res.status(200).send({ email, token });
+    return res.send({ email, token });
   }
 
   @ApiNoContentResponse()
@@ -66,7 +67,7 @@ export class AuthController {
     type: String,
   })
   @HttpCode(204)
-  @Post('verify-reset-password-token')
+  @Get('verify-reset-password-token')
   async verifyResetPasswordToken(@Query('token') token) {
     await this.authService.verifyResetPasswordToken(token);
   }
