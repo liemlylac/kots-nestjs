@@ -21,12 +21,21 @@ export class AuthService {
    * @param password
    */
   async validateLogin(username, password) {
+    const user = await this.validateUser(username);
+    if (user && (await this.hashService.compareHash(password, user.password))) {
+      return user;
+    }
+    return null;
+  }
+
+  /**
+   * Use for JwtStrategy
+   *
+   * @param username
+   */
+  async validateUser(username) {
     const user = await this.usersService.getByUsername(username);
-    if (
-      user &&
-      user.active &&
-      (await this.hashService.compareHash(password, user.password))
-    ) {
+    if (user && user.active) {
       return user;
     }
     return null;
