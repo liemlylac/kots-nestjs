@@ -21,10 +21,10 @@ import { UserService } from '../service/user.service';
 import { UpdateUser } from '../dto/update-user.dto';
 import { User } from '../entity/user.entity';
 
-@Controller('user')
-@UseGuards(AuthGuard())
-@ApiBearerAuth()
 @ApiTags('User')
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -41,6 +41,6 @@ export class UserController {
   @Put('')
   @HttpCode(204)
   update(@Request() request, @Body() user: UpdateUser) {
-    return this.userService.update(request.user.userId, user);
+    return this.userService.update(request.user.id, user);
   }
 }
