@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBasicAuth, ApiOperation } from '@nestjs/swagger';
 import { Login } from '../dto/login.dto';
 import { AuthService } from '../service/auth.service';
 import { Register } from '../dto/register.dto';
@@ -10,6 +10,10 @@ import { Register } from '../dto/register.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiBasicAuth()
+  @ApiOperation({
+    description: 'Basic authentication with username and password',
+  })
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Body() login: Login, @Request() request) {
