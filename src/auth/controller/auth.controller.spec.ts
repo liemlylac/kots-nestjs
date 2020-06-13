@@ -5,7 +5,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from '../service/auth.service';
 import { HashService } from '../service/hash.service';
 import { UserService } from '../../user/service/user.service';
-import { Login } from '../dto/login.dto';
 import { LoginRO } from '../ro/login.ro';
 import { Register } from '../dto/register.dto';
 
@@ -43,11 +42,6 @@ describe('Auth Controller', () => {
 
   describe('login', () => {
     it('should return login object', async () => {
-      const login: Login = {
-        username: '',
-        password: '',
-      };
-
       const loginRO = new LoginRO();
 
       jest.spyOn(authService, 'afterLogin').mockImplementation(
@@ -55,7 +49,15 @@ describe('Auth Controller', () => {
           return loginRO;
         },
       );
-      expect(await authController.login(login, {})).toMatchObject(loginRO);
+      expect(
+        await authController.login(
+          {
+            username: '',
+            password: '',
+          },
+          {},
+        ),
+      ).toMatchObject(loginRO);
     });
   });
 

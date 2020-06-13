@@ -1,15 +1,14 @@
-import { ConflictException } from '@nestjs/common';
-import { TestingModule, Test } from '@nestjs/testing';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
 import { Register } from '../dto/register.dto';
-import { Login } from '../dto/login.dto';
 import { LoginRO } from '../ro/login.ro';
 import { AuthService } from './auth.service';
 import { HashService } from './hash.service';
-import { JwtConfigService } from './jwt.config.service';
-import { ConfigModule } from '../../config/config.module';
 import { UserService } from '../../user/service/user.service';
-import { UserRepository } from '../../user/entity/repo/user.repository';
 import { User } from '../../user/entity/user.entity';
 
 describe('AuthService', () => {
@@ -21,48 +20,30 @@ describe('AuthService', () => {
   const signJwt = 'signJwtGeneratedDummyValue';
   const testDateData = new Date();
 
-  const users: User[] = [
-    {
-      id: 'uuid01',
-      displayName: 'John Doe',
-      username: 'johndoe',
-      password: 'hard!secret-passwordHashed',
-      email: '',
-      phone: '',
-      active: true,
-      createDate: testDateData,
-      updateDate: testDateData,
-    },
-    {
-      id: 'uuid02',
-      displayName: 'John Doe',
-      username: 'john_doe',
-      password: 'hard!secret-passwordHashed',
-      email: '',
-      phone: '',
-      active: false,
-      createDate: testDateData,
-      updateDate: testDateData,
-    },
-  ];
-
-  const login: Login = {
-    username: users[0].username,
-    password: 'hard!secret-password',
+  const user: User = {
+    id: 'uuid01',
+    displayName: 'John Doe',
+    username: 'johndoe',
+    password: 'hard!secret-passwordHashed',
+    email: '',
+    phone: '',
+    active: true,
+    createDate: testDateData,
+    updateDate: testDateData,
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot(),
-        JwtModule.registerAsync({ useClass: JwtConfigService }),
-      ],
+      imports: [],
       providers: [
-        HashService,
         AuthService,
-        UserService,
-        // no need to create user repository object from class UserRepository
-        { provide: UserRepository, useValue: {} },
+        // mock provider
+        { provide: JwtService, useValue: { sign: () => null } },
+        { provide: HashService, useValue: { compareHash: () => null } },
+        {
+          provide: UserService,
+          useValue: { getByUsername: () => null, create: () => null },
+        },
       ],
     }).compile();
 
@@ -72,26 +53,6 @@ describe('AuthService', () => {
     jwtService = module.get<JwtService>(JwtService);
 
     // Mock implementation
-    jest
-      .spyOn(userService, 'getByUsername')
-      .mockImplementation(async username => {
-        return users.find(
-          user => user.username === username && user.active === true,
-        );
-      });
-
-    jest
-      .spyOn(hashService, 'hashPassword')
-      .mockImplementation(async password => {
-        return Promise.resolve(password + 'Hashed');
-      });
-
-    jest
-      .spyOn(hashService, 'compareHash')
-      .mockImplementation(async (password, hashed) => {
-        return Promise.resolve(password + 'Hashed' === hashed);
-      });
-
     jest.spyOn(jwtService, 'sign').mockImplementation(() => {
       return signJwt;
     });
@@ -103,27 +64,55 @@ describe('AuthService', () => {
 
   describe('validateLogin()', () => {
     it('should return User if match username and password', async () => {
-      expect(
-        await authService.validateLogin(login.username, login.password),
-      ).toEqual(users[0]);
+      const user = new User({ active: true });
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return user;
+      });
+      jest.spyOn(hashService, 'compareHash').mockImplementation(async () => {
+        return true;
+      });
+      expect(await authService.validateLogin('anything', 'anything')).toEqual(
+        user,
+      );
     });
 
-    it('should return null if user is inactive', async () => {
+    it('should return null if wrong password', async () => {
+      const user = new User({ active: true });
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return user;
+      });
+      jest.spyOn(hashService, 'compareHash').mockImplementation(async () => {
+        return false;
+      });
       expect(
-        await authService.validateLogin('john_doe', login.password),
+        await authService.validateLogin('anything', 'anything'),
       ).toBeNull();
     });
 
-    it('should return null if incorrect username', async () => {
+    it('should return null if user is not existed', async () => {
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return null;
+      });
       expect(
-        await authService.validateLogin('wrong_username', login.password),
+        await authService.validateLogin('anything', 'anything'),
       ).toBeNull();
     });
+  });
 
-    it('should return null if incorrect password', async () => {
-      expect(
-        await authService.validateLogin(login.username, 'wrong_password'),
-      ).toBeNull();
+  describe('validateUser()', () => {
+    it('should return User if match username', async () => {
+      const user = new User({ active: true });
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return user;
+      });
+      expect(await authService.validateUser('anything')).toEqual(user);
+    });
+
+    it('should return null if username is not existed', async () => {
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return null;
+      });
+      expect(await authService.validateUser('anything')).toBeNull();
     });
   });
 
@@ -137,12 +126,21 @@ describe('AuthService', () => {
 
   describe('afterLogin()', () => {
     it('should return object include token', async () => {
-      expect(await authService.afterLogin(users[0])).toMatchObject(loginRegex);
+      expect(await authService.afterLogin(user)).toMatchObject(loginRegex);
     });
   });
 
   describe('register()', () => {
+    const registerData: Register = {
+      displayName: user.displayName,
+      username: user.username,
+      password: user.password,
+    };
+
     it('should return login response object when register success', async () => {
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return null;
+      });
       jest
         .spyOn(userService, 'create')
         .mockImplementationOnce(async register => {
@@ -152,24 +150,29 @@ describe('AuthService', () => {
           return user;
         });
 
-      const registerData: Register = {
-        displayName: users[0].displayName,
-        username: users[0].username + 'other',
-        password: login.password,
-      };
       expect(await authService.register(registerData)).toMatchObject(
         loginRegex,
       );
     });
 
     it('should throw exception when username is already exists', async () => {
-      const registerData: Register = {
-        displayName: users[0].displayName,
-        username: users[0].username,
-        password: users[0].password,
-      };
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return new User();
+      });
       expect(authService.register(registerData)).rejects.toThrow(
         ConflictException,
+      );
+    });
+
+    it('should throw exception when internal server error', async () => {
+      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+        return null;
+      });
+      jest.spyOn(userService, 'create').mockImplementationOnce(async () => {
+        throw new InternalServerErrorException();
+      });
+      expect(authService.register(registerData)).rejects.toThrow(
+        InternalServerErrorException,
       );
     });
   });

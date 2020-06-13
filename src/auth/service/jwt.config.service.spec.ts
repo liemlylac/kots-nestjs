@@ -9,7 +9,7 @@ describe('class JwtConfigService', () => {
   const jwtOptions = {
     secret: 'kotsJwtSecretKey',
     signOptions: {
-      expiresIn: 28800,
+      expiresIn: 28800000,
     },
   };
 
@@ -20,16 +20,6 @@ describe('class JwtConfigService', () => {
 
     jwtConfigService = module.get<JwtConfigService>(JwtConfigService);
     configService = module.get<ConfigService>(ConfigService);
-
-    // mock method of object with parameter
-    jest.spyOn(configService, 'get').mockImplementation(configKey => {
-      if (configKey === 'auth.jwt.accessSecretKey') {
-        return jwtOptions.secret;
-      }
-      if (configKey === 'auth.jwt.accessKeyLifetime') {
-        return jwtOptions.signOptions.expiresIn;
-      }
-    });
   });
 
   it('should be defined', () => {
@@ -38,6 +28,15 @@ describe('class JwtConfigService', () => {
 
   describe('createJwtOptions()', () => {
     it('shout return jwt options', async () => {
+      // mock method of object with parameter
+      jest.spyOn(configService, 'get').mockImplementation(configKey => {
+        if (configKey === 'auth.jwt.accessSecretKey') {
+          return jwtOptions.secret;
+        }
+        if (configKey === 'auth.jwt.accessKeyLifetime') {
+          return jwtOptions.signOptions.expiresIn;
+        }
+      });
       expect(jwtConfigService.createJwtOptions()).toStrictEqual(jwtOptions);
     });
   });

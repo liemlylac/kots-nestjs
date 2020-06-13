@@ -4,7 +4,6 @@ import { HashService } from './hash.service';
 
 describe('class HashService', () => {
   let hashService: HashService;
-  const configService: ConfigService = new ConfigService();
   const obj = {
     pepper: 'kotsSecretPepper',
     salt: '$2a$10$rAbkDL9ANLkgStTrHUbN9.',
@@ -14,18 +13,14 @@ describe('class HashService', () => {
   };
 
   beforeEach(async () => {
-    // Here we mock ConfigService before inject to HashService constructor
-    jest.spyOn(configService, 'get').mockImplementation(key => {
-      if (key === 'auth.pepper') {
-        return obj.pepper;
-      }
-    });
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         HashService,
         {
           provide: ConfigService,
-          useValue: configService,
+          useValue: {
+            get: key => (key === 'auth.pepper' ? obj.pepper : null),
+          },
         },
       ],
     }).compile();
@@ -39,20 +34,19 @@ describe('class HashService', () => {
 
   describe('getSalt()', () => {
     it('should return unique salt', async () => {
+      const oldSalt = hashService.getSalt();
       expect(hashService.getSalt()).toEqual(
         expect.stringMatching(/^\$2[ayb]\$10\$.{22}$/),
       );
+      expect(hashService.getSalt()).not.toEqual(oldSalt);
     });
   });
 
   describe('hashPassword()', () => {
-    beforeAll(async () => {
+    it('should return a hash password', async () => {
       jest.spyOn(hashService, 'getSalt').mockImplementationOnce(() => {
         return obj.salt;
       });
-    });
-
-    it('should return a hash password', async () => {
       expect(await hashService.hashPassword(obj.password)).toEqual(
         expect.stringMatching(/^\$2[ayb]\$10\$.{53}$/),
       );
@@ -65,7 +59,7 @@ describe('class HashService', () => {
     });
   });
 
-  describe('hashPassword()', () => {
+  describe('compareHash()', () => {
     it('should return true if input right password', async () => {
       expect(
         await hashService.compareHash(obj.password, obj.hashPassword),

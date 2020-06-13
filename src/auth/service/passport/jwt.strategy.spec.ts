@@ -1,52 +1,57 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
-import { LocalStrategy } from './local.strategy';
+import { ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
 import { AuthService } from '../auth.service';
 import { User } from '../../../user/entity/user.entity';
 
-describe('class LocalStrategy', () => {
-  let localStrategy: LocalStrategy;
+describe('class JwtStrategy', () => {
+  let jwtStrategy: JwtStrategy;
   let authService: AuthService;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        LocalStrategy,
+        JwtStrategy,
         {
           provide: AuthService,
           useValue: {
-            validateLogin: async () => {
+            validateUser: () => {
               return null;
             },
           },
         },
+        {
+          provide: ConfigService,
+          useValue: { get: key => key }, //mock config get return secret or key
+        },
       ],
     }).compile();
 
-    localStrategy = module.get<LocalStrategy>(LocalStrategy);
+    jwtStrategy = module.get<JwtStrategy>(JwtStrategy);
     authService = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
-    expect(localStrategy).toBeDefined();
+    expect(jwtStrategy).toBeDefined();
   });
 
   describe('validate()', () => {
     it('should return user schema when validate login return user schema', async () => {
       const user = new User();
       jest
-        .spyOn(authService, 'validateLogin')
+        .spyOn(authService, 'validateUser')
         .mockImplementationOnce(async () => {
           return user;
         });
-      expect(await localStrategy.validate('anything', 'anything')).toEqual(
-        user,
-      );
+      expect(await jwtStrategy.validate({})).toEqual(user);
     });
 
     it('should throw unauthorized exception if validate login return null', async () => {
-      expect(localStrategy.validate('anything', 'anything')).rejects.toThrow(
-        UnauthorizedException,
-      );
+      jest.spyOn(authService, 'validateUser').mockImplementationOnce(() => {
+        return null;
+      });
+      expect(jwtStrategy.validate({})).rejects.toThrow(UnauthorizedException);
     });
   });
 });
