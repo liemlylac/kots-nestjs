@@ -3,23 +3,27 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
+  Logger,
+  LoggerService,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Register } from '../dto/register.dto';
+import { ResetPassword } from '../dto/reset-password.dto';
 import { LoginRO } from '../ro/login.ro';
+import { CryptoService } from './crypto.service';
 import { HashService } from './hash.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/entity/user.entity';
-import { CryptoService } from './crypto.service';
-import { LoggerService } from '../../core/services/logger.service';
-import { ResetPassword } from '../dto/reset-password.dto';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly loggerService: LoggerService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
     private readonly jwtService: JwtService,
     private readonly hashService: HashService,
     private readonly cryptoService: CryptoService,
@@ -107,7 +111,7 @@ export class AuthService {
     try {
       return this.cryptoService.decodeCipherFromToken(token);
     } catch (e) {
-      this.loggerService.error(e);
+      this.logger.error(e);
       throw new BadRequestException('Invalid token');
     }
   }

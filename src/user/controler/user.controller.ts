@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   HttpCode,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -25,12 +26,12 @@ import { User } from '../entity/user.entity';
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ description: 'Get user data' })
   @ApiOkResponse({ type: User })
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get('profile')
   getProfile(@Request() req) {
     return this.userService.getByUsername(req.user.username);
@@ -40,7 +41,10 @@ export class UserController {
   @ApiNoContentResponse({ description: 'Api will response empty body' })
   @Put('')
   @HttpCode(204)
-  update(@Request() request, @Body() user: UpdateUser) {
+  update(
+    @Request() request,
+    @Body(new ValidationPipe()) user: Partial<UpdateUser>,
+  ) {
     return this.userService.update(request.user.id, user);
   }
 }

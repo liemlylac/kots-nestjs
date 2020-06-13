@@ -2,22 +2,25 @@ import {
   Injectable,
   InternalServerErrorException,
   BadRequestException,
+  Inject,
+  Logger,
+  LoggerService,
 } from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { UserRepository } from '../entity/repo/user.repository';
 import { Register } from '../../auth/dto/register.dto';
 import { HashService } from '../../auth/service/hash.service';
-import { LoggerService } from '../../core/services/logger.service';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly userRepo: UserRepository,
-    private readonly hashService: HashService,
+    //@Inject(Logger)
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly logger: LoggerService,
-  ) {
-    this.logger.setContext(UserService.name);
-  }
+    private readonly hashService: HashService,
+    private readonly userRepo: UserRepository,
+  ) {}
 
   /**
    * Get User by username
@@ -47,7 +50,8 @@ export class UserService {
   async create(user: Register): Promise<User> {
     user.password = await this.hashService.hashPassword(user.password);
     try {
-      return await this.userRepo.save(user);
+      // We need to reload to get id of user to generate token
+      return await this.userRepo.save(user, { reload: true });
     } catch (e) {
       this.logger.error(e);
       throw new InternalServerErrorException();
