@@ -29,9 +29,7 @@ import { RequestPassword } from '../dto/request-password.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({
     description: 'Basic authentication with username and password',
@@ -62,6 +60,17 @@ export class AuthController {
     return res.status(200).send({ email, token });
   }
 
+  @ApiNoContentResponse()
+  @ApiQuery({
+    name: 'token',
+    type: String,
+  })
+  @HttpCode(204)
+  @Post('verify-reset-password-token')
+  async verifyResetPasswordToken(@Query('token') token) {
+    await this.authService.verifyResetPasswordToken(token);
+  }
+
   @ApiOkResponse({ type: '' })
   @ApiQuery({
     name: 'token',
@@ -74,16 +83,5 @@ export class AuthController {
     @Body(new ValidationPipe()) data: ResetPassword,
   ) {
     await this.authService.resetPassword(token, data);
-  }
-
-  @ApiNoContentResponse()
-  @ApiQuery({
-    name: 'token',
-    type: String,
-  })
-  @HttpCode(204)
-  @Post('verify-reset-password-token')
-  async verifyResetPasswordToken(@Query('token') token) {
-    await this.authService.verifyResetPasswordToken(token);
   }
 }
