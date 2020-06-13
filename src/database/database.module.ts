@@ -20,7 +20,7 @@ export class DatabaseModule {
             password: configService.get<string>('db.password'),
             database: configService.get<string>('db.database'),
             entities: ['dist/**/*.entity{.ts,.js}'],
-            synchronize: true,
+            synchronize: false,
             logging: configService.get<boolean>('db.logging'),
             migrationsTableName: 'migration',
             migrations: ['/migration/*{.ts, .js}'],
