@@ -4,8 +4,6 @@ import {
   Post,
   Request,
   UseGuards,
-  Res,
-  HttpCode,
   Query,
   ValidationPipe,
   Get,
@@ -16,7 +14,6 @@ import {
   ApiOperation,
   ApiTags,
   ApiCreatedResponse,
-  ApiNoContentResponse,
   ApiQuery,
   ApiBody,
 } from '@nestjs/swagger';
@@ -56,17 +53,14 @@ export class AuthController {
     type: RequestPassword,
   })
   @Post('request-password')
-  async requestPassword(@Body('email') email: string, @Res() res) {
-    const token = await this.authService.requestPassword(email);
-    return res.send({ email, token });
+  async requestPassword(@Body('email') email: string) {
+    return await this.authService.requestPassword(email);
   }
 
-  @ApiNoContentResponse()
   @ApiQuery({
     name: 'token',
     type: String,
   })
-  @HttpCode(204)
   @Get('verify-reset-password-token')
   async verifyResetPasswordToken(@Query('token') token) {
     await this.authService.verifyResetPasswordToken(token);
@@ -77,7 +71,6 @@ export class AuthController {
     name: 'token',
     type: String,
   })
-  @HttpCode(204)
   @Post('reset-password')
   async resetPassword(
     @Query('token') token: string,

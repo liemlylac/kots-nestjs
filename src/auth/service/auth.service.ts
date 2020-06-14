@@ -6,6 +6,7 @@ import {
   Inject,
   Logger,
   LoggerService,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -17,6 +18,7 @@ import { HashService } from './hash.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/entity/user.entity';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { MailService } from '../../core/services/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +29,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly hashService: HashService,
     private readonly cryptoService: CryptoService,
+    private readonly mailService: MailService,
     private readonly usersService: UserService,
   ) {}
 
@@ -104,15 +107,39 @@ export class AuthService {
         new Date().getTime() +
         Number(this.configService.get<number>('auth.pwd.resetTokenLifeTime')),
     };
-    return this.cryptoService.generateCipherToken(content);
+    const token = this.cryptoService.generateCipherToken(content);
+
+    await this.sendMailRequestPassword(user, token);
   }
 
-  protected decodeToken(token) {
+  protected async sendMailRequestPassword(user: User, token) {
+    const resetTokenLifeTime = this.configService.get(
+      'auth.pwd.resetTokenLifeTime',
+    ); // unit ms. Default: 1,800,000ms
+
+    /**
+     * Prepare data for template mail
+     */
+    const data = {
+      to: user.email,
+      subject: 'Request to reset password',
+      template: 'request-password',
+      context: {
+        metaTitle: 'Request to reset password',
+        metaDescription:
+          'You recently request to reset your password for Kots account',
+        displayName: user.displayName,
+        token,
+        resetTokenLifeTime: resetTokenLifeTime / 60000, //convert to minutes
+      },
+    };
+
     try {
-      return this.cryptoService.decodeCipherFromToken(token);
-    } catch (e) {
-      this.logger.error(e);
-      throw new BadRequestException('Invalid token');
+      const sendMailInfo = await this.mailService.sendMail(data);
+      return sendMailInfo.accepted.join();
+    } catch (error) {
+      this.logger.error(error, AuthService.name);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -140,9 +167,43 @@ export class AuthService {
   async resetPassword(token: string, resetPassword: ResetPassword) {
     const tokenContent = this.decodeToken(token);
     this.verifyTokenExp(tokenContent);
-    await this.usersService.changePassword(
+    const user: User = await this.usersService.changePassword(
       tokenContent.userId,
       resetPassword.password,
     );
+    await this.sendMailResetPassword(user);
+  }
+
+  protected decodeToken(token) {
+    try {
+      return this.cryptoService.decodeCipherFromToken(token);
+    } catch (e) {
+      this.logger.error(e, AuthService.name);
+      throw new BadRequestException('Invalid token');
+    }
+  }
+
+  protected async sendMailResetPassword(user: User) {
+    /**
+     * Prepare data for template mail
+     */
+    const data = {
+      to: user.email,
+      subject: 'Password changed',
+      template: 'reset-password',
+      context: {
+        metaTitle: 'Password changed',
+        metaDescription: 'Your Kots password has been changed',
+        displayName: user.displayName,
+      },
+    };
+
+    try {
+      const sendMailInfo = await this.mailService.sendMail(data);
+      return sendMailInfo.accepted.join();
+    } catch (error) {
+      this.logger.error(error, AuthService.name);
+      throw new InternalServerErrorException();
+    }
   }
 }

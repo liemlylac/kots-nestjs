@@ -3,6 +3,10 @@ import { LoggerOptions } from 'winston';
 import winston = require('winston');
 
 export class WinstonConfigService implements WinstonModuleOptionsFactory {
+  // noinspection JSUnusedGlobalSymbols
+  /**
+   * Create logger options for winston
+   */
   createWinstonModuleOptions(): LoggerOptions {
     return {
       format: winston.format.json(),
@@ -15,11 +19,11 @@ export class WinstonConfigService implements WinstonModuleOptionsFactory {
           ),
         }),
         new winston.transports.File({
-          filename: __dirname + '/log/error.log',
+          filename: process.cwd() + '/log/error.log',
           level: 'error',
         }), // - Write all logs with level `error` and below to `error.log`
         new winston.transports.File({
-          filename: __dirname + '/log/combined.log',
+          filename: process.cwd() + '/log/combined.log',
         }),
         // - Write all logs with level `info` and below to `combined.log`
       ],

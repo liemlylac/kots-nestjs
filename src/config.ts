@@ -4,4 +4,7 @@ export const CONFIG = {
       IGNORE_EXPIRATION: false,
     },
   },
+  MAIL: {
+    VERIFY_SMTP_CONFIG: false,
+  },
 };

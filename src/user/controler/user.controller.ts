@@ -17,6 +17,7 @@ import {
   ApiOperation,
   ApiOkResponse,
   ApiNoContentResponse,
+  ApiBody,
 } from '@nestjs/swagger';
 import { UserService } from '../service/user.service';
 import { UpdateUser } from '../dto/update-user.dto';
@@ -39,6 +40,7 @@ export class UserController {
 
   @ApiOperation({ description: 'User update self data' })
   @ApiNoContentResponse({ description: 'Api will response empty body' })
+  @ApiBody({ type: UpdateUser })
   @Put('')
   @HttpCode(204)
   update(

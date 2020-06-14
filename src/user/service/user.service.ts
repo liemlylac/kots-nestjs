@@ -5,6 +5,7 @@ import {
   Inject,
   Logger,
   LoggerService,
+  NotFoundException,
 } from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { UserRepository } from '../entity/repo/user.repository';
@@ -86,10 +87,14 @@ export class UserService {
    * @param password
    */
   async changePassword(id: any, password: string) {
-    const user = new User();
+    const user = await this.userRepo.findOne({ id });
+    if (!user) {
+      throw new NotFoundException('User is not existed');
+    }
     user.password = await this.hashService.hashPassword(password);
     try {
-      return await this.userRepo.update(id, user);
+      await this.userRepo.update(id, user);
+      return user;
     } catch (e) {
       this.logger.error(e);
       throw new InternalServerErrorException();
