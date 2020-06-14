@@ -6,6 +6,7 @@ import { ConfigModule } from '../config/config.module';
 @Module({})
 export class DatabaseModule {
   static forRoot(): DynamicModule {
+    // noinspection JSUnusedGlobalSymbols
     return {
       module: DatabaseModule,
       imports: [

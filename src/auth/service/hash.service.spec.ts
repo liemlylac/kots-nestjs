@@ -4,6 +4,7 @@ import { HashService } from './hash.service';
 
 describe('class HashService', () => {
   let hashService: HashService;
+  // noinspection SpellCheckingInspection
   const obj = {
     pepper: 'kotsSecretPepper',
     salt: '$2a$10$rAbkDL9ANLkgStTrHUbN9.',
