@@ -2,22 +2,17 @@ import {
   Injectable,
   InternalServerErrorException,
   BadRequestException,
-  Inject,
-  Logger,
-  LoggerService,
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '../entity/user.entity';
 import { UserRepository } from '../entity/repo/user.repository';
 import { Register } from '../../auth/dto/register.dto';
 import { HashService } from '../../auth/service/hash.service';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { LoggerService } from '../../core/services/logger-service';
 
 @Injectable()
 export class UserService {
   constructor(
-    //@Inject(Logger)
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly logger: LoggerService,
     private readonly hashService: HashService,
     private readonly userRepo: UserRepository,

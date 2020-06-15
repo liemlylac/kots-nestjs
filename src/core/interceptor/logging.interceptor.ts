@@ -3,20 +3,15 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-  Inject,
-  LoggerService,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Request, Response } from 'express';
+import { LoggerService } from '../services/logger-service';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
-    private readonly loggerService: LoggerService,
-  ) {}
+  constructor(private readonly loggerService: LoggerService) {}
 
   // noinspection JSUnusedGlobalSymbols
   /**

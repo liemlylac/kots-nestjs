@@ -3,9 +3,6 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  Inject,
-  Logger,
-  LoggerService,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -17,14 +14,13 @@ import { CryptoService } from './crypto.service';
 import { HashService } from './hash.service';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/entity/user.entity';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { MailService } from '../../core/services/mail.service';
+import { LoggerService } from '../../core/services/logger-service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly logger: LoggerService,
     private readonly jwtService: JwtService,
     private readonly hashService: HashService,

@@ -8,6 +8,7 @@ export const generalConfigSchema = {
   FE_URL: Joi.string().default('http://localhost:4200'),
   API_ROOT: Joi.string().default('api'),
   ENABLE_SWAGGER: Joi.boolean().default(false),
+  LOGGING_INTERNAL_SERVER_ERROR: Joi.boolean().default(true),
 };
 
 export function generalConfig() {
@@ -17,5 +18,8 @@ export function generalConfig() {
     apiRoot: process.env.API_ROOT,
     enableSwagger:
       process.env.ENABLE_SWAGGER.toString().toLowerCase() === 'true',
+    loggingInternalServerError:
+      process.env.LOGGING_INTERNAL_SERVER_ERROR.toString().toLowerCase() ===
+      'true',
   };
 }

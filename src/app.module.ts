@@ -5,12 +5,10 @@ import {
   MiddlewareConsumer,
   RequestMethod,
 } from '@nestjs/common';
-import { WinstonModule } from 'nest-winston';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { CoreModule } from './core/core.module';
-import { WinstonConfigService } from './core/services/winston-config.service';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { providers } from './app.providers';
@@ -24,9 +22,6 @@ import { MailConfigService } from './core/services/mail-config.service';
     DatabaseModule.forRoot(),
     MailerModule.forRootAsync({
       useClass: MailConfigService,
-    }),
-    WinstonModule.forRootAsync({
-      useClass: WinstonConfigService,
     }),
     AuthModule,
     UserModule,

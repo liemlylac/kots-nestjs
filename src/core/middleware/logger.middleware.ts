@@ -1,18 +1,10 @@
-import {
-  Injectable,
-  NestMiddleware,
-  LoggerService,
-  Inject,
-} from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { LoggerService } from '../services/logger-service';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  constructor(
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
-    private readonly loggerService: LoggerService,
-  ) {}
+  constructor(private readonly loggerService: LoggerService) {}
 
   // noinspection JSUnusedGlobalSymbols
   /**

@@ -10,7 +10,7 @@ async function bootstrap() {
     //logger: console,
     logger: WinstonModule.createLogger({
       format: winston.format.json(),
-      defaultMeta: { service: 'bootstrap' },
+      defaultMeta: { service: 'nest' },
       transports: [
         new winston.transports.Console({
           format: winston.format.combine(

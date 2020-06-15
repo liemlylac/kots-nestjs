@@ -1,23 +1,17 @@
 import { ConfigService } from '@nestjs/config';
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-  LoggerService,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { MailerOptions } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import * as path from 'path';
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport';
 import * as nodeMailer from 'nodemailer';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { LoggerService } from './logger-service';
 import { CONFIG } from '../../config';
 
 @Injectable()
 export class MailConfigService {
   constructor(
     private readonly configService: ConfigService,
-    @Inject(WINSTON_MODULE_NEST_PROVIDER)
     private readonly loggerService: LoggerService,
   ) {}
 

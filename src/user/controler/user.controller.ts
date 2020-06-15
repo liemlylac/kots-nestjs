@@ -22,6 +22,7 @@ import {
 import { UserService } from '../service/user.service';
 import { UpdateUser } from '../dto/update-user.dto';
 import { User } from '../entity/user.entity';
+import { LoggerService } from '../../core/services/logger-service';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -29,7 +30,12 @@ import { User } from '../entity/user.entity';
 @Controller('user')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly loggerService: LoggerService,
+    private readonly userService: UserService,
+  ) {
+    this.loggerService.log('construct', UserController.name);
+  }
 
   @ApiOperation({ description: 'Get user data' })
   @ApiOkResponse({ type: User })
