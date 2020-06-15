@@ -35,7 +35,7 @@ export class MailConfigService {
       },
       preview: this.configService.get<boolean>('mail.preview'),
       template: {
-        dir: path.join(process.cwd(), 'templates/pages'),
+        dir: path.join(process.cwd(), 'dist/assets/templates/pages'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
@@ -43,7 +43,7 @@ export class MailConfigService {
       },
       options: {
         partials: {
-          dir: path.join(process.cwd(), 'templates/partials'),
+          dir: path.join(process.cwd(), 'dist/assets/templates/partials'),
           options: {
             strict: true,
           },
