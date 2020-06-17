@@ -19,10 +19,10 @@ import {
   ApiNoContentResponse,
   ApiBody,
 } from '@nestjs/swagger';
+import { LoggerService } from '@core/services/logger-service';
 import { UserService } from '../service/user.service';
 import { UpdateUser } from '../dto/update-user.dto';
 import { User } from '../entity/user.entity';
-import { LoggerService } from '../../core/services/logger-service';
 
 @ApiTags('User')
 @ApiBearerAuth()

@@ -4,11 +4,11 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+import { LoggerService } from '@core/services/logger-service';
 import { User } from '../entity/user.entity';
 import { UserRepository } from '../entity/repo/user.repository';
 import { Register } from '../../auth/dto/register.dto';
 import { HashService } from '../../auth/service/hash.service';
-import { LoggerService } from '../../core/services/logger-service';
 
 @Injectable()
 export class UserService {

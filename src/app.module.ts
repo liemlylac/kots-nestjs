@@ -6,14 +6,14 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { ConfigModule } from '@config/config.module';
+import { CoreModule } from '@core/core.module';
+import { LoggerMiddleware } from '@core/middleware/logger.middleware';
+import { MailConfigService } from '@core/services/mail-config.service';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from './config/config.module';
-import { CoreModule } from './core/core.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { providers } from './app.providers';
-import { LoggerMiddleware } from './core/middleware/logger.middleware';
-import { MailConfigService } from './core/services/mail-config.service';
 
 @Module({
   imports: [

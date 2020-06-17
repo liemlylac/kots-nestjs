@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '../config/config.module';
+import { ConfigModule } from '@config/config.module';
 
 @Module({})
 export class DatabaseModule {
@@ -21,7 +21,7 @@ export class DatabaseModule {
             password: configService.get<string>('db.password'),
             database: configService.get<string>('db.database'),
             entities: ['dist/**/*.entity{.ts,.js}'],
-            synchronize: false,
+            synchronize: true,
             logging: configService.get<boolean>('db.logging'),
             migrationsTableName: 'migration',
             migrations: ['/migration/*{.ts, .js}'],
