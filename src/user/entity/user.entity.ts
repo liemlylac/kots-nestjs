@@ -4,8 +4,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -41,6 +41,16 @@ export class User {
   @Column({ default: true })
   active: boolean;
 
+  @ManyToOne(
+    () => Role,
+    role => role.users,
+    {
+      onDelete: 'SET NULL',
+    },
+  )
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
+
   @ApiProperty()
   @CreateDateColumn({ name: 'create_date' })
   createDate: Date;
@@ -48,23 +58,6 @@ export class User {
   @ApiProperty()
   @UpdateDateColumn({ name: 'update_date' })
   updateDate: Date;
-
-  @ManyToMany(
-    () => Role,
-    role => role.users,
-  )
-  @JoinTable({
-    name: 'user_role',
-    joinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'role_id',
-      referencedColumnName: 'id',
-    },
-  })
-  roles: Role[];
 
   constructor(partial?: Partial<User>) {
     Object.assign(this, partial);

@@ -7,15 +7,18 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Brackets, Repository } from 'typeorm';
+import { MailService } from '@core/services/mail.service';
+import { LoggerService } from '@core/services/logger-service';
 import { Register } from '../dto/register.dto';
 import { ResetPassword } from '../dto/reset-password.dto';
 import { LoginRO } from '../ro/login.ro';
 import { CryptoService } from './crypto.service';
 import { HashService } from './hash.service';
+import { Permission } from '../entity/permission.entity';
 import { UserService } from '../../user/service/user.service';
 import { User } from '../../user/entity/user.entity';
-import { MailService } from '../../core/services/mail.service';
-import { LoggerService } from '../../core/services/logger-service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +29,8 @@ export class AuthService {
     private readonly hashService: HashService,
     private readonly cryptoService: CryptoService,
     private readonly mailService: MailService,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
     private readonly usersService: UserService,
   ) {}
 
@@ -201,5 +206,38 @@ export class AuthService {
       this.logger.error(error, AuthService.name);
       throw new InternalServerErrorException();
     }
+  }
+
+  async validatePermission(role, action, resource) {
+    return (
+      (await this.permissionRepository
+        .createQueryBuilder('permission')
+        .innerJoin('permission.role', 'role')
+        .innerJoin('permission.resource', 'resource')
+        .innerJoin('permission.action', 'action')
+        .where('role.code = :role', { role: role })
+        .orWhere(
+          new Brackets(subWhere => {
+            subWhere
+              .where('action.code = :action', { action: action })
+              .andWhere('resource.code = :resource', { resource: resource });
+          }),
+        )
+        .orWhere(
+          new Brackets(subWhere => {
+            subWhere
+              .where('action.code = "all"')
+              .andWhere('resource.code = :resource', { resource: resource });
+          }),
+        )
+        .orWhere(
+          new Brackets(subWhere => {
+            subWhere
+              .where('action.code = "all"')
+              .andWhere('resource.code = "all"');
+          }),
+        )
+        .getCount()) > 0
+    );
   }
 }

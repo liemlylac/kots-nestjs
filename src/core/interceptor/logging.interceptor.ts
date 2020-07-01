@@ -28,9 +28,9 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         this.loggerService.log(
-          `${request.method} ${request.url} ${
+          `Response ${request.method} ${request.url} with status code ${
             response.statusCode
-          } ${Date.now() - start}ms`,
+          } in ${Date.now() - start}ms`,
           LoggingInterceptor.name,
         );
       }),

@@ -15,7 +15,7 @@ export class LoggerMiddleware implements NestMiddleware {
    */
   use(req: Request, res: Response, next: Function) {
     this.loggerService.log(
-      `${req.method} ${req.baseUrl}`,
+      `Request ${req.method} ${req.baseUrl}`,
       LoggerMiddleware.name,
     );
     next();
