@@ -20,7 +20,7 @@ import {
 import { Login } from '../dto/login.dto';
 import { AuthService } from '../service/auth.service';
 import { Register } from '../dto/register.dto';
-import { LoginRO } from '../ro/login.ro';
+import { LoginResult } from '../ro/login.ro';
 import { ResetPassword } from '../dto/reset-password.dto';
 import { RequestPassword } from '../dto/request-password.dto';
 
@@ -32,7 +32,7 @@ export class AuthController {
   @ApiOperation({
     description: 'Basic authentication with username and password',
   })
-  @ApiCreatedResponse({ type: LoginRO })
+  @ApiCreatedResponse({ type: LoginResult })
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Body() login: Login, @Request() request) {
@@ -42,9 +42,9 @@ export class AuthController {
   @ApiOperation({
     description: 'Register a new user account',
   })
-  @ApiCreatedResponse({ type: LoginRO })
+  @ApiCreatedResponse({ type: LoginResult })
   @Post('register')
-  async register(@Body() registerDto: Register): Promise<LoginRO> {
+  async register(@Body() registerDto: Register): Promise<LoginResult> {
     return this.authService.register(registerDto);
   }
 

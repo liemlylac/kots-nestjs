@@ -5,7 +5,7 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { Register } from '../dto/register.dto';
-import { LoginRO } from '../ro/login.ro';
+import { LoginResult } from '../ro/login.ro';
 import { AuthService } from './auth.service';
 import { HashService } from './hash.service';
 import { UserService } from '../../user/service/user.service';
@@ -116,12 +116,15 @@ describe('AuthService', () => {
     });
   });
 
-  const loginRegex: LoginRO = {
-    displayName: expect.stringMatching(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/),
-    username: expect.stringMatching(
-      /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
-    ),
-    token: signJwt,
+  const loginRegex: LoginResult = {
+    isSuccess: true,
+    loginUser: {
+      displayName: expect.stringMatching(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/),
+      username: expect.stringMatching(
+        /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
+      ),
+      token: signJwt,
+    },
   };
 
   describe('afterLogin()', () => {

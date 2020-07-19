@@ -1,33 +1,33 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as winston from 'winston';
-import { WinstonModule, utilities } from 'nest-winston';
+// import * as winston from 'winston';
+// import { WinstonModule, utilities } from 'nest-winston';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     //logger: console,
-    logger: WinstonModule.createLogger({
-      format: winston.format.json(),
-      defaultMeta: { service: 'nest' },
-      transports: [
-        new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            utilities.format.nestLike(),
-          ),
-        }),
-        new winston.transports.File({
-          filename: __dirname + '/log/error.log',
-          level: 'error',
-        }), // - Write all logs with level `error` and below to `error.log`
-        new winston.transports.File({
-          filename: __dirname + '/log/combined.log',
-        }),
-        // - Write all logs with level `info` and below to `combined.log`
-      ],
-    }),
+    // logger: WinstonModule.createLogger({
+    //   format: winston.format.json(),
+    //   defaultMeta: { service: 'nest' },
+    //   transports: [
+    //     new winston.transports.Console({
+    //       format: winston.format.combine(
+    //         winston.format.timestamp(),
+    //         utilities.format.nestLike(),
+    //       ),
+    //     }),
+    //     new winston.transports.File({
+    //       filename: __dirname + '/log/error.log',
+    //       level: 'error',
+    //     }), // - Write all logs with level `error` and below to `error.log`
+    //     new winston.transports.File({
+    //       filename: __dirname + '/log/combined.log',
+    //     }),
+    //     // - Write all logs with level `info` and below to `combined.log`
+    //   ],
+    // }),
     cors: true,
   });
 

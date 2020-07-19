@@ -1,6 +1,6 @@
 {
   "name": "kots-backend-v7",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Kots project using Nest framework version 7",
   "author": "",
   "private": true,

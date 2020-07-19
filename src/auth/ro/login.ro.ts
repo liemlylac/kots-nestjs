@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginRO {
+export class LoginUser {
   @ApiProperty({
     type: String,
     example: 'John Doe',
@@ -17,4 +17,18 @@ export class LoginRO {
     type: String,
   })
   token: string;
+}
+
+export class LoginResult {
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
+  isSuccess: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
+  loginUser: LoginUser;
 }

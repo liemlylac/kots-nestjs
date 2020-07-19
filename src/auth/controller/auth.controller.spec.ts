@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from '../service/auth.service';
 import { HashService } from '../service/hash.service';
 import { UserService } from '../../user/service/user.service';
-import { LoginRO } from '../ro/login.ro';
+import { LoginResult } from '../ro/login.ro';
 import { Register } from '../dto/register.dto';
 
 describe('Auth Controller', () => {
@@ -42,10 +42,10 @@ describe('Auth Controller', () => {
 
   describe('login', () => {
     it('should return login object', async () => {
-      const loginRO = new LoginRO();
+      const loginRO = new LoginResult();
 
       jest.spyOn(authService, 'afterLogin').mockImplementation(
-        async (): Promise<LoginRO> => {
+        async (): Promise<LoginResult> => {
           return loginRO;
         },
       );
@@ -63,10 +63,10 @@ describe('Auth Controller', () => {
 
   describe('register', () => {
     it('should return login object after register success', async () => {
-      const loginRO = new LoginRO();
+      const loginRO = new LoginResult();
 
       jest.spyOn(authService, 'register').mockImplementation(
-        async (): Promise<LoginRO> => {
+        async (): Promise<LoginResult> => {
           return loginRO;
         },
       );
@@ -78,7 +78,7 @@ describe('Auth Controller', () => {
 
     it('should throw ConflictException when AuthService throw exception', async () => {
       jest.spyOn(authService, 'register').mockImplementation(
-        async (): Promise<LoginRO> => {
+        async (): Promise<LoginResult> => {
           throw new ConflictException();
         },
       );

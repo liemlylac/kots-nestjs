@@ -13,7 +13,7 @@ import { MailService } from '@core/services/mail.service';
 import { LoggerService } from '@core/services/logger-service';
 import { Register } from '../dto/register.dto';
 import { ResetPassword } from '../dto/reset-password.dto';
-import { LoginRO } from '../ro/login.ro';
+import { LoginResult } from '../ro/login.ro';
 import { CryptoService } from './crypto.service';
 import { HashService } from './hash.service';
 import { Permission } from '../entity/permission.entity';
@@ -66,12 +66,15 @@ export class AuthService {
    *
    * @param user
    */
-  async afterLogin(user: User): Promise<LoginRO> {
+  async afterLogin(user: User): Promise<LoginResult> {
     const payload = { userId: user.id, username: user.username };
     return {
-      displayName: user.displayName,
-      username: user.username,
-      token: this.jwtService.sign(payload),
+      isSuccess: true,
+      loginUser: {
+        displayName: user.displayName,
+        username: user.username,
+        token: this.jwtService.sign(payload),
+      },
     };
   }
 
@@ -80,7 +83,7 @@ export class AuthService {
    *
    * @param register
    */
-  async register(register: Register): Promise<LoginRO> {
+  async register(register: Register): Promise<LoginResult> {
     const existingUser = await this.usersService.getByUsername(
       register.username,
     );
@@ -110,7 +113,9 @@ export class AuthService {
     };
     const token = this.cryptoService.generateCipherToken(content);
 
-    await this.sendMailRequestPassword(user, token);
+    const sentEmail = await this.sendMailRequestPassword(user, token);
+
+    return { email: sentEmail };
   }
 
   protected async sendMailRequestPassword(user: User, token) {
@@ -179,7 +184,7 @@ export class AuthService {
     try {
       return this.cryptoService.decodeCipherFromToken(token);
     } catch (e) {
-      this.logger.error(e, AuthService.name);
+      this.logger.error(e.message, e.stack, AuthService.name);
       throw new BadRequestException('Invalid token');
     }
   }
