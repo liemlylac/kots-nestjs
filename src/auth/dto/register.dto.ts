@@ -9,5 +9,5 @@ export class Register extends Login {
   })
   @IsString()
   @Matches(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/)
-  displayName: string;
+  fullName: string;
 }

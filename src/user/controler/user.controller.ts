@@ -41,7 +41,7 @@ export class UserController {
   @ApiOkResponse({ type: User })
   @Get('profile')
   getProfile(@Request() req) {
-    return this.userService.getByUsername(req.user.username);
+    return this.userService.getByEmail(req.user.email);
   }
 
   @ApiOperation({ description: 'User update self data' })

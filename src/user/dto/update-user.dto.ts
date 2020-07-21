@@ -8,7 +8,7 @@ export class UpdateUser {
   })
   @IsOptional()
   @IsString()
-  displayName: string;
+  fullName: string;
 
   @ApiPropertyOptional({
     type: String,

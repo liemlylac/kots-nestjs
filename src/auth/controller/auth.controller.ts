@@ -7,6 +7,7 @@ import {
   Query,
   ValidationPipe,
   Get,
+  Req,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -30,7 +31,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({
-    description: 'Basic authentication with username and password',
+    description: 'Basic authentication with email and password',
   })
   @ApiCreatedResponse({ type: LoginResult })
   @UseGuards(AuthGuard('local'))
@@ -77,5 +78,17 @@ export class AuthController {
     @Body(new ValidationPipe()) data: ResetPassword,
   ) {
     await this.authService.resetPassword(token, data);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleOAuth2() {
+    // initiates the Google OAuth2 login flow
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  googleOAuth2CallBack(@Req() req) {
+    return this.authService.googleLogin(req);
   }
 }

@@ -51,8 +51,9 @@ export class CryptoService {
    */
   public decodeCipherFromToken(token: string) {
     const parts = token.split(this.SPLITTER_IV);
-    const iv = new Buffer(parts.shift(), this.outputEncoding);
-    const tokenBody = new Buffer(
+    const iv = Buffer.alloc(16, parts.shift(), this.outputEncoding);
+    const tokenBody = Buffer.alloc(
+      80,
       parts.join(this.SPLITTER_IV),
       this.outputEncoding,
     );

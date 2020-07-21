@@ -8,10 +8,10 @@ describe('class UserRepository', () => {
   const users: User[] = [
     {
       id: 'uuid01',
-      displayName: 'John Doe',
-      username: 'johndoe',
+      fullName: 'John Doe',
+      picture: 'johndoe',
       password: 'secretPassword',
-      email: '',
+      email: 'johndoe@example.com',
       phone: '',
       active: true,
       createDate: testDateData,
@@ -19,10 +19,10 @@ describe('class UserRepository', () => {
     },
     {
       id: 'uuid02',
-      displayName: 'John Doe',
-      username: 'john_doe',
+      fullName: 'John Doe',
+      picture: 'john_doe',
       password: 'secretPassword',
-      email: '',
+      email: 'john_doe@example.com',
       phone: '',
       active: false,
       createDate: testDateData,
@@ -49,24 +49,26 @@ describe('class UserRepository', () => {
         .mockImplementation(async condition => {
           return users.find(
             user =>
-              user.username === condition.username &&
+              user.email === condition.email &&
               user.active === condition.active,
           );
         });
     });
 
-    it('should return user with username and is active', async () => {
-      expect(await userRepository.getByUsername('johndoe')).toEqual(users[0]);
-    });
-
-    it('should not return with username and is inactive', async () => {
-      expect(await userRepository.getByUsername('john_doe')).not.toEqual(
-        users[1],
+    it('should return user with email and is active', async () => {
+      expect(await userRepository.getByEmail('johndoe@example.com')).toEqual(
+        users[0],
       );
     });
 
+    it('should not return with email and is inactive', async () => {
+      expect(
+        await userRepository.getByEmail('john_doe@example.com'),
+      ).not.toEqual(users[1]);
+    });
+
     it('should not return user is not exist', async () => {
-      expect(await userRepository.getByUsername('no_username')).toBeUndefined();
+      expect(await userRepository.getByEmail('no_email')).toBeUndefined();
     });
   });
 });

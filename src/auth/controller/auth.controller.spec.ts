@@ -52,7 +52,7 @@ describe('Auth Controller', () => {
       expect(
         await authController.login(
           {
-            username: '',
+            email: '',
             password: '',
           },
           {},

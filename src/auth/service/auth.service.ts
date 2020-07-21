@@ -37,11 +37,11 @@ export class AuthService {
   /**
    * Use for LocalStrategy
    *
-   * @param username
+   * @param email
    * @param password
    */
-  async validateLogin(username, password) {
-    const user = await this.validateUser(username);
+  async validateLogin(email, password) {
+    const user = await this.validateUser(email);
     if (user && (await this.hashService.compareHash(password, user.password))) {
       return user;
     }
@@ -51,10 +51,10 @@ export class AuthService {
   /**
    * Use for JwtStrategy
    *
-   * @param username
+   * @param email
    */
-  async validateUser(username) {
-    const user = await this.usersService.getByUsername(username);
+  async validateUser(email: string) {
+    const user = await this.usersService.getByEmail(email);
     if (user && user.active) {
       return user;
     }
@@ -65,15 +65,17 @@ export class AuthService {
    * Use to return user data and token after login successfully
    *
    * @param user
+   * @param loginType
    */
-  async afterLogin(user: User): Promise<LoginResult> {
-    const payload = { userId: user.id, username: user.username };
+  async afterLogin(user: User, loginType = 'password'): Promise<LoginResult> {
+    const payload = { userId: user.id, email: user.email, loginType };
     return {
       isSuccess: true,
       loginUser: {
-        displayName: user.displayName,
-        username: user.username,
-        token: this.jwtService.sign(payload),
+        fullName: user.fullName,
+        email: user.email,
+        picture: user.picture,
+        accessToken: this.jwtService.sign(payload),
       },
     };
   }
@@ -84,13 +86,11 @@ export class AuthService {
    * @param register
    */
   async register(register: Register): Promise<LoginResult> {
-    const existingUser = await this.usersService.getByUsername(
-      register.username,
-    );
+    const existingUser = await this.usersService.getByEmail(register.email);
     if (existingUser && existingUser.id) {
-      throw new ConflictException('User with this username is already exists');
+      throw new ConflictException('User with this email is already exists');
     }
-    // If username is available, create a new user and login
+    // If email is available, create a new user and login
     const newUser = await this.usersService.create(register);
     return this.afterLogin(newUser);
   }
@@ -134,8 +134,8 @@ export class AuthService {
         metaTitle: 'Request to reset password',
         metaDescription:
           'You recently request to reset your password for Kots account',
-        displayName: user.displayName,
-        token,
+        fullName: user.fullName,
+        token: token,
         resetTokenLifeTime: resetTokenLifeTime / 60000, //convert to minutes
       },
     };
@@ -180,6 +180,11 @@ export class AuthService {
     await this.sendMailResetPassword(user);
   }
 
+  async googleLogin(req) {
+    const googleUser = await this.usersService.create(req.user);
+    return this.afterLogin(googleUser, 'google');
+  }
+
   protected decodeToken(token) {
     try {
       return this.cryptoService.decodeCipherFromToken(token);
@@ -200,7 +205,7 @@ export class AuthService {
       context: {
         metaTitle: 'Password changed',
         metaDescription: 'Your Kots password has been changed',
-        displayName: user.displayName,
+        fullName: user.fullName,
       },
     };
 

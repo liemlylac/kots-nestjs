@@ -19,16 +19,7 @@ export class UserService {
   ) {}
 
   /**
-   * Get User by username
-   *
-   * @param username
-   */
-  async getByUsername(username: string): Promise<User> {
-    return await this.userRepo.getByUsername(username);
-  }
-
-  /**
-   * Get User by username
+   * Get User by email
    *
    * @param email
    */

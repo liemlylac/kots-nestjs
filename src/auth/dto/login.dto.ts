@@ -1,14 +1,14 @@
-import { IsString, Matches } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class Login {
   @ApiProperty({
     type: String,
-    example: 'johndoe',
+    example: 'johndoe@example.com',
   })
   @IsString()
-  @Matches(/^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/)
-  username: string;
+  @IsEmail()
+  email: string;
 
   @ApiProperty({
     type: String,

@@ -22,11 +22,11 @@ describe('AuthService', () => {
 
   const user: User = {
     id: 'uuid01',
-    displayName: 'John Doe',
-    username: 'johndoe',
+    fullName: 'John Doe',
+    email: 'johndoe@example.com',
     password: 'hard!secret-passwordHashed',
-    email: '',
-    phone: '',
+    picture: null,
+    phone: null,
     active: true,
     createDate: testDateData,
     updateDate: testDateData,
@@ -42,7 +42,7 @@ describe('AuthService', () => {
         { provide: HashService, useValue: { compareHash: () => null } },
         {
           provide: UserService,
-          useValue: { getByUsername: () => null, create: () => null },
+          useValue: { getByEmail: () => null, create: () => null },
         },
       ],
     }).compile();
@@ -63,9 +63,9 @@ describe('AuthService', () => {
   });
 
   describe('validateLogin()', () => {
-    it('should return User if match username and password', async () => {
+    it('should return User if match email and password', async () => {
       const user = new User({ active: true });
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return user;
       });
       jest.spyOn(hashService, 'compareHash').mockImplementation(async () => {
@@ -78,7 +78,7 @@ describe('AuthService', () => {
 
     it('should return null if wrong password', async () => {
       const user = new User({ active: true });
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return user;
       });
       jest.spyOn(hashService, 'compareHash').mockImplementation(async () => {
@@ -90,7 +90,7 @@ describe('AuthService', () => {
     });
 
     it('should return null if user is not existed', async () => {
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return null;
       });
       expect(
@@ -100,16 +100,16 @@ describe('AuthService', () => {
   });
 
   describe('validateUser()', () => {
-    it('should return User if match username', async () => {
+    it('should return User if match email', async () => {
       const user = new User({ active: true });
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return user;
       });
       expect(await authService.validateUser('anything')).toEqual(user);
     });
 
-    it('should return null if username is not existed', async () => {
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+    it('should return null if email is not existed', async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return null;
       });
       expect(await authService.validateUser('anything')).toBeNull();
@@ -119,11 +119,12 @@ describe('AuthService', () => {
   const loginRegex: LoginResult = {
     isSuccess: true,
     loginUser: {
-      displayName: expect.stringMatching(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/),
-      username: expect.stringMatching(
+      fullName: expect.stringMatching(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/),
+      email: expect.stringMatching(
         /^(?=.{6,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
       ),
-      token: signJwt,
+      picture: '',
+      accessToken: signJwt,
     },
   };
 
@@ -135,21 +136,21 @@ describe('AuthService', () => {
 
   describe('register()', () => {
     const registerData: Register = {
-      displayName: user.displayName,
-      username: user.username,
+      fullName: user.fullName,
+      email: user.email,
       password: user.password,
     };
 
     it('should return login response object when register success', async () => {
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return null;
       });
       jest
         .spyOn(userService, 'create')
         .mockImplementationOnce(async register => {
           const user = new User();
-          user.displayName = register.displayName;
-          user.username = register.username;
+          user.fullName = register.fullName;
+          user.email = register.email;
           return user;
         });
 
@@ -158,8 +159,8 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw exception when username is already exists', async () => {
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+    it('should throw exception when email is already exists', async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return new User();
       });
       expect(authService.register(registerData)).rejects.toThrow(
@@ -168,7 +169,7 @@ describe('AuthService', () => {
     });
 
     it('should throw exception when internal server error', async () => {
-      jest.spyOn(userService, 'getByUsername').mockImplementation(async () => {
+      jest.spyOn(userService, 'getByEmail').mockImplementation(async () => {
         return null;
       });
       jest.spyOn(userService, 'create').mockImplementationOnce(async () => {

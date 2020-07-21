@@ -18,12 +18,12 @@ export class User {
   id: string;
 
   @ApiProperty()
-  @Column({ name: 'display_name', type: 'varchar', length: 255 })
-  displayName: string;
+  @Column({ name: 'full_name', type: 'varchar', length: 255 })
+  fullName: string;
 
   @ApiProperty()
-  @Column({ type: 'varchar', length: 255, unique: true })
-  username: string;
+  @Column({ type: 'varchar', length: 255 })
+  email: string;
 
   @Exclude()
   @Column({ type: 'varchar', length: 255 })
@@ -31,7 +31,7 @@ export class User {
 
   @ApiProperty()
   @Column({ type: 'varchar', length: 255, nullable: true })
-  email: string;
+  picture: string;
 
   @ApiProperty()
   @Column({ type: 'varchar', length: 255, nullable: true })
@@ -49,7 +49,7 @@ export class User {
     },
   )
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role?: Role;
 
   @ApiProperty()
   @CreateDateColumn({ name: 'create_date' })

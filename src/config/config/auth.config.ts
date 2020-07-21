@@ -22,6 +22,11 @@ export function authConfig() {
         accessKeyLifetime: process.env.JWT_ACCESS_KEY_LIFE_TIME,
         refreshSecretKeyLifetime: process.env.JWT_REFRESH_SECRET_KEY_LIFE_TIME,
       },
+      oauth: {
+        googleClientId: process.env.GOOGLE_CLIENT_ID,
+        googleSecret: process.env.GOOGLE_SECRET,
+        googleCallback: process.env.GOOGLE_CALLBACK,
+      },
     },
   };
 }

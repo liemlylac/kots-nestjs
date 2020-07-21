@@ -5,18 +5,24 @@ export class LoginUser {
     type: String,
     example: 'John Doe',
   })
-  displayName: string;
+  fullName: string;
 
   @ApiProperty({
     type: String,
-    example: 'johndoe',
+    example: 'johndoe@example.com',
   })
-  username: string;
+  email: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'https://example.com/images/avatar-person.svg',
+  })
+  picture: string;
 
   @ApiProperty({
     type: String,
   })
-  token: string;
+  accessToken: string;
 }
 
 export class LoginResult {
@@ -27,8 +33,7 @@ export class LoginResult {
   isSuccess: boolean;
 
   @ApiProperty({
-    type: Boolean,
-    example: true,
+    type: LoginUser,
   })
   loginUser: LoginUser;
 }
