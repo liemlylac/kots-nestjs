@@ -1,42 +1,45 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { forwardRef, Module } from '@nestjs/common';
+import { ConfigModule } from '@config/config.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { AuthController } from './controller/auth.controller';
-import { RoleController } from './controller/role.controller';
-import { ResourceController } from './controller/resource.controller';
-import { JwtStrategy } from './service/passport/jwt.strategy';
-import { LocalStrategy } from './service/passport/local.strategy';
-import { GoogleStrategy } from './service/passport/google.strategy';
-import { AuthService } from './service/auth.service';
-import { HashService } from './service/hash.service';
-import { CryptoService } from './service/crypto.service';
-import { JwtConfigService } from './service/jwt.config.service';
-import { RoleService } from './service/role.service';
-import { ResourceService } from './service/resource.service';
-import { Role } from './entity/role.entity';
-import { Resource } from './entity/resource.entity';
-import { Action } from './entity/action.entity';
-import { Permission } from './entity/permission.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as DeviceDetector from 'device-detector-js';
 import { UserModule } from '../user/user.module';
+import { AuthController } from './auth.controller';
+import { JwtConfig, JwtStrategy, LocalStrategy } from './passports';
+import { authConfig } from './auth.config';
+import {
+  ActionRepository,
+  PermissionRepository,
+  ResourceRepository,
+  RoleRepository,
+  SessionRepository,
+} from './resources/';
+import { AuthService, RoleService, SessionService } from './services';
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Role, Resource, Action, Permission]),
+    TypeOrmModule.forFeature([
+      ActionRepository,
+      PermissionRepository,
+      ResourceRepository,
+      RoleRepository,
+      SessionRepository,
+    ]),
+    ConfigModule.forFeature(authConfig),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    JwtModule.registerAsync({ useClass: JwtConfigService }),
-    UserModule,
+    JwtModule.registerAsync({ useClass: JwtConfig }),
+    forwardRef(() => UserModule),
   ],
+  controllers: [AuthController],
   providers: [
     AuthService,
-    HashService,
-    CryptoService,
     LocalStrategy,
     JwtStrategy,
-    GoogleStrategy,
     RoleService,
-    ResourceService,
+    SessionService,
+    DeviceDetector,
   ],
-  controllers: [AuthController, RoleController, ResourceController],
-  exports: [AuthService, HashService],
+  exports: [AuthService, SessionService],
 })
 export class AuthModule {}

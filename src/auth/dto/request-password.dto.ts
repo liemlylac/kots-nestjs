@@ -1,10 +1,10 @@
-import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail } from 'class-validator';
 
-export class RequestPassword {
+export class RequestPasswordDTO {
   @ApiProperty({
     example: 'johndoe@example.com',
   })
-  @IsString()
+  @IsEmail()
   email: string;
 }

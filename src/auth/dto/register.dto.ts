@@ -1,13 +1,19 @@
-import { IsString, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Login } from './login.dto';
+import { IsString, MinLength } from 'class-validator';
+import { LoginDTO } from './login.dto';
 
-export class Register extends Login {
+export class RegisterDTO extends LoginDTO {
   @ApiProperty({
-    type: String,
-    example: 'John Doe',
+    example: 'John',
   })
   @IsString()
-  @Matches(/^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/)
-  fullName: string;
+  @MinLength(1)
+  firstName: string;
+
+  @ApiProperty({
+    example: 'Doe',
+  })
+  @MinLength(1)
+  @IsString()
+  lastName: string;
 }

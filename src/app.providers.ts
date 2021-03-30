@@ -1,8 +1,11 @@
-import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
-import { HttpExceptionFilter } from '@core/filter/http-exception.filter';
-import { LoggingInterceptor } from '@core/interceptor/logging.interceptor';
-import { TimeoutInterceptor } from '@core/interceptor/timeout.interceptor';
-import { RolesGuard } from './auth/guard/roles.guard';
+import {
+  HttpExceptionFilter,
+  LoggingInterceptor,
+  TimeoutInterceptor,
+} from '@app/common';
+import { ValidationPipe } from '@nestjs/common';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { RolesGuard } from './auth';
 
 export const providers = [
   {
@@ -20,5 +23,14 @@ export const providers = [
   {
     provide: APP_INTERCEPTOR,
     useClass: TimeoutInterceptor,
+  },
+  {
+    provide: APP_PIPE,
+    useFactory: () =>
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
   },
 ];

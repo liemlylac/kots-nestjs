@@ -9,10 +9,11 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true,
+    "incremental": false,
     "paths": {
-      "@core/*": ["src/core/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@app/common": ["src/common/index"],
+      "@app/mail": ["src/mail/index"]
     }
   },
   "exclude": ["node_modules", "dist"]

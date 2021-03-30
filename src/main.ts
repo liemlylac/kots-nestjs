@@ -1,54 +1,44 @@
+import { ConfigService } from '@config/config.service';
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-// import * as winston from 'winston';
-// import { WinstonModule, utilities } from 'nest-winston';
+import * as helmet from 'helmet';
+import * as rateLimit from 'express-rate-limit';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    //logger: console,
-    // logger: WinstonModule.createLogger({
-    //   format: winston.format.json(),
-    //   defaultMeta: { service: 'nest' },
-    //   transports: [
-    //     new winston.transports.Console({
-    //       format: winston.format.combine(
-    //         winston.format.timestamp(),
-    //         utilities.format.nestLike(),
-    //       ),
-    //     }),
-    //     new winston.transports.File({
-    //       filename: __dirname + '/log/error.log',
-    //       level: 'error',
-    //     }), // - Write all logs with level `error` and below to `error.log`
-    //     new winston.transports.File({
-    //       filename: __dirname + '/log/combined.log',
-    //     }),
-    //     // - Write all logs with level `info` and below to `combined.log`
-    //   ],
-    // }),
     cors: true,
   });
+  app.use(helmet());
+  app.use(
+    rateLimit({
+      windowMs: 5 * 60 * 1000, // 5 minutes
+      max: 100, // limit each IP to 100 requests per windowMs
+    }),
+  );
 
-  const configService = app.get(ConfigService);
-
+  const config = app.get(ConfigService);
   /**
    * Swagger Api code block
    */
-  if (configService.get<boolean>('enableSwagger')) {
+  if (config.get('ENABLE_SWAGGER')) {
     const options = new DocumentBuilder()
-      .setTitle('Kots Software')
-      .setDescription('The #100 software development tool used by agile teams')
-      .setVersion('0.0.1')
-      .setContact('Liem Vo', null, 'liemlylac@gmail.com')
+      .setTitle(config.get('npm_package_name'))
+      .setDescription(config.get('npm_package_description'))
+      .setVersion(config.get('npm_package_version'))
+      .setContact(
+        config.get('npm_package_author_name'),
+        config.get('npm_package_author_url'),
+        config.get('npm_package_author_email'),
+      )
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup(configService.get<string>('apiRoot'), app, document);
+    SwaggerModule.setup(config.get('API_ROOT'), app, document);
   }
 
-  await app.listen(configService.get<number>('port'));
+  await app.listen(config.get('port'));
 }
+
 // noinspection JSIgnoredPromiseFromCall
 bootstrap();
