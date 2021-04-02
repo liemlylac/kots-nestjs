@@ -6,7 +6,7 @@ import { ProjectStatusResource } from '../resources';
 export class ProjectMilestoneService {
   constructor(private readonly resource: ProjectStatusResource) {}
 
-  getCategory(projectKey: string): Promise<ProjectStatusEntity[]> {
+  getMilestones(projectKey: string): Promise<ProjectStatusEntity[]> {
     return this.resource.getStatusesByProject(projectKey);
   }
 }

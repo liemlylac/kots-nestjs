@@ -2,14 +2,18 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, Headers,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateProjectIssueTypeDTO, UpdateProjectIssueTypeDTO } from '../dto';
+import {
+  CreateProjectCategoryDTO,
+  UpdateProjectCategoryDTO,
+} from '../dto';
 import { ProjectCategoryService } from '../services';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ProjectIdOrKey } from '../entities';
 
 @ApiTags('Project Category')
 @ApiBearerAuth()
@@ -17,32 +21,37 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 export class ProjectCategoryController {
   constructor(protected readonly service: ProjectCategoryService) {}
   @Get('')
-  getProjectCategory(@Param('projectKey') projectKey: string) {
-    return projectKey;
+  getProjectCategory(
+    @Headers('spaceKey') spaceKey: string,
+    @Param('projectKey') projectIdOrKey: ProjectIdOrKey) {
+    return this.service.getCategories(spaceKey, projectIdOrKey);
   }
 
   @Post('')
   addProjectCategory(
-    @Param('projectKey') projectKey: string,
-    @Body() data: CreateProjectIssueTypeDTO,
+    @Headers('spaceKey') spaceKey: string,
+    @Param('projectKey') projectIdOrKey: ProjectIdOrKey,
+    @Body() data: CreateProjectCategoryDTO,
   ) {
-    return projectKey;
+    return this.service.addCategory(spaceKey, projectIdOrKey, data);
   }
 
   @Patch(':id')
   updateProjectCategory(
-    @Param('projectKey') projectKey: string,
+    @Headers('spaceKey') spaceKey: string,
+    @Param('projectKey') projectIdOrKey: ProjectIdOrKey,
     @Param('id') id: number,
-    @Body() data: UpdateProjectIssueTypeDTO,
+    @Body() data: UpdateProjectCategoryDTO,
   ) {
-    return projectKey;
+    return this.service.updateCategory(spaceKey, projectIdOrKey, id, data);
   }
 
   @Delete(':id')
   deleteProjectCategory(
-    @Param('projectKey') projectKey: string,
+    @Headers('spaceKey') spaceKey: string,
+    @Param('projectKey') projectIdOrKey: ProjectIdOrKey,
     @Param('id') id: number,
   ) {
-    return projectKey;
+    return this.service.deleteCategory(spaceKey, projectIdOrKey, id);
   }
 }

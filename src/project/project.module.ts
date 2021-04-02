@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   ProjectController,
@@ -24,6 +24,7 @@ import {
   ProjectStatusResource,
   ProjectWebhookResource,
 } from './resources';
+import { ProjectMiddleware } from './middlewares/project.middleware';
 
 @Module({
   imports: [
@@ -53,4 +54,8 @@ import {
     ProjectWebhookService,
   ],
 })
-export class ProjectModule {}
+export class ProjectModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(ProjectMiddleware).forRoutes('projects');
+  }
+}

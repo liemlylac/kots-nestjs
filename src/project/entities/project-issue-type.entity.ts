@@ -36,5 +36,5 @@ export class ProjectIssueTypeEntity {
     () => ProjectEntity,
     project => project.issueTypes,
   )
-  project: ProjectEntity;
+  project?: ProjectEntity;
 }

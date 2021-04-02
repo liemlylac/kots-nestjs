@@ -5,7 +5,7 @@ import { ProjectMilestoneEntity } from '../entities';
 export class ProjectMilestoneResource extends Repository<
   ProjectMilestoneEntity
 > {
-  getMilestoneByProject(key: string): Promise<ProjectMilestoneEntity[]> {
+  getMilestonesByProject(key: string): Promise<ProjectMilestoneEntity[]> {
     return this.find({
       relations: ['project'],
       where: { project: { key: key } },

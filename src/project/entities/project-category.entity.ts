@@ -29,5 +29,5 @@ export class ProjectCategoryEntity {
     project => project.categories,
   )
   @JoinColumn({ name: 'project_id' })
-  project: ProjectEntity;
+  project?: ProjectEntity;
 }

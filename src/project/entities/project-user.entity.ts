@@ -1,4 +1,6 @@
-import { Entity, PrimaryColumn } from 'typeorm';
+import { CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { UserEntity } from '../../user';
+import { ProjectEntity } from './project.entity';
 
 @Entity('project_user')
 export class ProjectUserEntity {
@@ -17,4 +19,25 @@ export class ProjectUserEntity {
     nullable: false,
   })
   userId: string;
+
+  @ManyToOne(
+    () => UserEntity,
+    user => user.projectUsers,
+  )
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
+
+  @ManyToOne(
+    () => ProjectEntity,
+    project => project.projectUsers,
+  )
+  @JoinColumn({ name: 'project_id' })
+  project: ProjectEntity;
+
+  // Extra Columns
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

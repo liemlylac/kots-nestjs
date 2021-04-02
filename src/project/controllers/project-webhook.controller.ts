@@ -7,8 +7,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateProjectStatusDTO, UpdateProjectStatusDTO } from '../dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CreateProjectWebhookDTO, UpdateProjectWebhookDTO } from '../dto';
 
 @ApiTags('Project Webhook')
 @ApiBearerAuth()
@@ -22,18 +22,18 @@ export class ProjectWebhookController {
   @Post('')
   addProjectStatus(
     @Param('projectKey') projectKey: string,
-    @Body() data: CreateProjectStatusDTO,
+    @Body() data: CreateProjectWebhookDTO,
   ) {
-    return { ...data, projectKey: projectKey };
+    return { projectKey: projectKey, ...data };
   }
 
   @Patch(':id')
   updateProjectStatus(
     @Param('projectKey') projectKey: string,
     @Param('id') id: number,
-    @Body() data: UpdateProjectStatusDTO,
+    @Body() data: UpdateProjectWebhookDTO,
   ) {
-    return { id, ...data, projectKey: projectKey };
+    return { id, projectKey: projectKey, ...data };
   }
 
   @Delete(':id')
@@ -41,6 +41,6 @@ export class ProjectWebhookController {
     @Param('projectKey') projectKey: string,
     @Param('id') id: number,
   ) {
-    return projectKey;
+    return { id, projectKey: projectKey };
   }
 }

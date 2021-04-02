@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CreateProjectIssueTypeDTO, UpdateProjectIssueTypeDTO } from '../dto';
+import { CreateProjectMilestoneDTO, UpdateProjectMilestoneDTO } from '../dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Project Milestone')
@@ -22,7 +22,7 @@ export class ProjectMilestoneController {
   @Post('')
   addProjectCategory(
     @Param('projectKey') projectKey: string,
-    @Body() data: CreateProjectIssueTypeDTO,
+    @Body() data: CreateProjectMilestoneDTO,
   ) {
     return projectKey;
   }
@@ -31,7 +31,7 @@ export class ProjectMilestoneController {
   updateProjectCategory(
     @Param('projectKey') projectKey: string,
     @Param('id') id: number,
-    @Body() data: UpdateProjectIssueTypeDTO,
+    @Body() data: UpdateProjectMilestoneDTO,
   ) {
     return projectKey;
   }

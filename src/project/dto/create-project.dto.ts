@@ -1,24 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateProjectDTO {
   @ApiProperty()
   @IsString()
-  projectKey: string;
+  key: string;
 
   @ApiProperty()
   @IsString()
   name: string;
 
-  @ApiProperty()
-  @IsBoolean()
-  chartEnable: boolean;
-
-  @ApiProperty()
-  @IsBoolean()
-  subtaskEnable: boolean;
-
-  @ApiProperty()
+  @ApiProperty({ example: 'markdown' })
   @IsString()
   textFormattingRule: string;
 }

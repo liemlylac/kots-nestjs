@@ -14,6 +14,7 @@ import { ProjectIssueTypeEntity } from './project-issue-type.entity';
 import { ProjectCategoryEntity } from './project-category.entity';
 import { ProjectMilestoneEntity } from './project-milestone.entity';
 import { ProjectWebhookEntity } from './project-webhook.entity';
+import { ProjectUserEntity } from './project-user.entity';
 
 @Entity('project')
 @Index('IDX_PROJECT_KEY_SPACE_KEY', ['spaceKey', 'key'])
@@ -58,35 +59,41 @@ export class ProjectEntity {
     space => space.projects,
   )
   @JoinColumn({ name: 'space_id' })
-  space: SpaceEntity;
+  space?: SpaceEntity;
+
+  @OneToMany(
+    () => ProjectUserEntity,
+    projectUser => projectUser.project,
+  )
+  projectUsers: ProjectUserEntity[];
 
   @OneToMany(
     () => ProjectStatusEntity,
     projectStatus => projectStatus.project,
   )
-  statuses: ProjectStatusEntity[];
+  statuses?: ProjectStatusEntity[];
 
   @OneToMany(
     () => ProjectIssueTypeEntity,
     type => type.project,
   )
-  issueTypes: ProjectIssueTypeEntity[];
+  issueTypes?: ProjectIssueTypeEntity[];
 
   @OneToMany(
     () => ProjectCategoryEntity,
     category => category.project,
   )
-  categories: ProjectCategoryEntity[];
+  categories?: ProjectCategoryEntity[];
 
   @OneToMany(
     () => ProjectMilestoneEntity,
     milestone => milestone.project,
   )
-  milestones: ProjectMilestoneEntity[];
+  milestones?: ProjectMilestoneEntity[];
 
   @OneToMany(
     () => ProjectWebhookEntity,
     webhook => webhook.project,
   )
-  webhooks: ProjectWebhookEntity[];
+  webhooks?: ProjectWebhookEntity[];
 }

@@ -29,5 +29,5 @@ export class ProjectWebhookEntity {
     project => project.webhooks,
   )
   @JoinColumn({ name: 'project_id' })
-  project: ProjectEntity;
+  project?: ProjectEntity;
 }

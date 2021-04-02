@@ -29,6 +29,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "@automapper/classes": "^3.4.2",
+    "@automapper/core": "^3.4.2",
     "@hapi/joi": "^17.1.1",
     "@nestjs-modules/mailer": "^1.5.1",
     "@nestjs/common": "^7.6.5",
@@ -63,6 +65,7 @@
     "typeorm": "^0.2.25"
   },
   "devDependencies": {
+    "@automapper/types": "^3.4.2",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "@nestjs/cli": "^7.5.4",

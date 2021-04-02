@@ -1,4 +1,4 @@
-import { ConfigService } from '@config/config.service';
+ import { ConfigService } from '@config/config.service';
 import {
   CallHandler,
   ExecutionContext,

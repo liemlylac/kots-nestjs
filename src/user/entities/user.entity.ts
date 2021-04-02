@@ -12,9 +12,9 @@ import {
 import { RoleEntity } from '../../auth';
 import { UserSettingEntity } from './user-setting.entity';
 import { SpaceEntity } from '../../space';
-import { SpaceUserEntity } from '../../space/entities/space-user.entity';
-import { IssueCommentEntity } from '../../issue/entities/issue-comment.entity';
-import { IssueAttachmentEntity } from '../../issue/entities/issue-attachment.entity';
+import { SpaceUserEntity } from '../../space';
+import { ProjectUserEntity } from '../../project';
+import { IssueCommentEntity, IssueAttachmentEntity } from '../../issue/entities';
 
 @Entity('user')
 export class UserEntity {
@@ -30,7 +30,6 @@ export class UserEntity {
   @Column({ name: 'email', type: 'varchar', length: 255, nullable: false })
   email: string;
 
-  @Exclude()
   @Column({ name: 'password', type: 'varchar', length: 150, nullable: false })
   password: string;
 
@@ -40,7 +39,6 @@ export class UserEntity {
   @Column({ name: 'avatar', type: 'varchar', length: 255, nullable: true })
   avatar?: string;
 
-  @Exclude()
   @Column({
     name: 'active',
     type: 'tinyint',
@@ -90,6 +88,12 @@ export class UserEntity {
     spaceUser => spaceUser.user,
   )
   spaceUsers: SpaceUserEntity[];
+
+  @OneToMany(
+    () => ProjectUserEntity,
+    projectUser => projectUser.user,
+  )
+  projectUsers: ProjectUserEntity[];
 
   @OneToMany(
     () => IssueCommentEntity,

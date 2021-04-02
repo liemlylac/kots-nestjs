@@ -32,5 +32,5 @@ export class ProjectMilestoneEntity {
     project => project.milestones,
   )
   @JoinColumn({ name: 'project_id' })
-  project: ProjectEntity;
+  project?: ProjectEntity;
 }

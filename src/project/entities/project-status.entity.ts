@@ -29,5 +29,5 @@ export class ProjectStatusEntity {
     project => project.statuses,
   )
   @JoinColumn({ name: 'project_id' })
-  project: ProjectEntity;
+  project?: ProjectEntity;
 }
